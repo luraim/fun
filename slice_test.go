@@ -436,3 +436,52 @@ func TestDropLastWhile(t *testing.T) {
 		})
 	}
 }
+
+func TestDropWhile(t *testing.T) {
+	type args struct {
+		s  []int
+		fn func(int) bool
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{"less than slice len",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8},
+				func(i int) bool { return i < 5 },
+			},
+			[]int{5, 6, 7, 8},
+		},
+		{"empty slice",
+			args{
+				[]int{},
+				func(i int) bool { return i < 5 },
+			},
+			[]int{},
+		},
+
+		{"drop all",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8},
+				func(i int) bool { return i < 9 },
+			},
+			[]int{},
+		},
+		{"drop all but one",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8},
+				func(i int) bool { return i < 8 },
+			},
+			[]int{8},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := DropWhile(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DropWhile() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
