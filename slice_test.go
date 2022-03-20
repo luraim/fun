@@ -102,47 +102,6 @@ func TestFilter(t *testing.T) {
 	}
 }
 
-func TestTake(t *testing.T) {
-	type args struct {
-		elems []int
-		n     int
-	}
-	tests := []struct {
-		name string
-		args args
-		want []int
-	}{
-		{"take less than slice length",
-			args{
-				[]int{1, 2, 3, 4, 5, 6, 7, 8},
-				4,
-			},
-			[]int{1, 2, 3, 4},
-		},
-		{"take more than slice length",
-			args{
-				[]int{1, 2, 3, 4, 5, 6, 7, 8},
-				10,
-			},
-			[]int{1, 2, 3, 4, 5, 6, 7, 8},
-		},
-		{"take slice length",
-			args{
-				[]int{1, 2, 3, 4, 5, 6, 7, 8},
-				8,
-			},
-			[]int{1, 2, 3, 4, 5, 6, 7, 8},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Take(tt.args.elems, tt.args.n); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Take() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestAssociate(t *testing.T) {
 	type args struct {
 		elems []int
@@ -756,6 +715,116 @@ func TestReversed(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Reversed(tt.args.s); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reversed() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTake(t *testing.T) {
+	type args struct {
+		elems []int
+		n     int
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{"take less than slice length",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8},
+				4,
+			},
+			[]int{1, 2, 3, 4},
+		},
+		{"take more than slice length",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8},
+				10,
+			},
+			[]int{1, 2, 3, 4, 5, 6, 7, 8},
+		},
+		{"take slice length",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8},
+				8,
+			},
+			[]int{1, 2, 3, 4, 5, 6, 7, 8},
+		},
+		{"empty list",
+			args{
+				[]int{},
+				8,
+			},
+			[]int{},
+		},
+		{"take 0 elements",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8},
+				0,
+			},
+			[]int{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Take(tt.args.elems, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Take() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTakeLast(t *testing.T) {
+	type args struct {
+		s []int
+		n int
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{"less than slice len",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8},
+				2,
+			},
+			[]int{7, 8},
+		},
+		{"more than slice len",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8},
+				9,
+			},
+			[]int{1, 2, 3, 4, 5, 6, 7, 8},
+		},
+		{"exactly slice len",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8},
+				8,
+			},
+			[]int{1, 2, 3, 4, 5, 6, 7, 8},
+		},
+		{"empty list",
+			args{
+				[]int{},
+				8,
+			},
+			[]int{},
+		},
+		{"take 0 elements",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8},
+				0,
+			},
+			[]int{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := TakeLast(tt.args.s, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("TakeLast() = %v, want %v", got, tt.want)
 			}
 		})
 	}

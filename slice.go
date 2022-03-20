@@ -1,15 +1,5 @@
 package fun
 
-// Take returns the slice obtained after taking the first n elements from the
-// given slice.
-// If n is greater than the length of the slice, return the entire slice
-func Take[T any](s []T, n int) []T {
-	if len(s) <= n {
-		return s
-	}
-	return s[:n]
-}
-
 // All returns true if all elements return true for given predicate
 func All[T any](s []T, fn func(T) bool) bool {
 	for _, e := range s {
@@ -280,4 +270,23 @@ func Reversed[T any](s []T) []T {
 		ret = append(ret, s[i])
 	}
 	return ret
+}
+
+// Take returns the slice obtained after taking the first n elements from the
+// given slice.
+// If n is greater than the length of the slice, returns the entire slice
+func Take[T any](s []T, n int) []T {
+	if len(s) <= n {
+		return s
+	}
+	return s[:n]
+}
+
+// TakeLast returns the slice obtained after taking the last n elements from the
+// given slice.
+func TakeLast[T any](s []T, n int) []T {
+	if len(s) <= n {
+		return s
+	}
+	return s[len(s)-n:]
 }
