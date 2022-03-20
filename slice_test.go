@@ -530,7 +530,7 @@ func TestFoldIndexed(t *testing.T) {
 			args{
 				[]int{1, 2, 3, 4, 5},
 				0,
-				func(acc, index, v int) int { return acc + index*v },
+				func(index, acc, v int) int { return acc + index*v },
 			},
 			40,
 		},
@@ -692,6 +692,36 @@ func TestReduce(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Reduce(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reduce() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestReduceIndexed(t *testing.T) {
+	type args struct {
+		s  []string
+		fn func(int, string, string) string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"reduce indexed",
+			args{
+				[]string{"a", "b", "c", "d"},
+				func(index int, acc, v string) string {
+					return fmt.Sprintf("%s%s%d", acc, v, index)
+				},
+			},
+
+			"ab1c2d3",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ReduceIndexed(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ReduceIndexed() = %v, want %v", got, tt.want)
 			}
 		})
 	}

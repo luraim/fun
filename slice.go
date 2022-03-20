@@ -180,10 +180,10 @@ func Fold[T, R any](s []T, initial R, fn func(R, T) R) R {
 // FoldIndexed accumulates values starting with given initial value and applying
 // given function to current accumulator and each element. Function also
 // receives index of current element.
-func FoldIndexed[T, R any](s []T, initial R, fn func(R, int, T) R) R {
+func FoldIndexed[T, R any](s []T, initial R, fn func(int, R, T) R) R {
 	acc := initial
 	for i, e := range s {
-		acc = fn(acc, i, e)
+		acc = fn(i, acc, e)
 	}
 	return acc
 }
@@ -241,7 +241,7 @@ func Partition[T any](s []T, fn func(T) bool) ([]T, []T) {
 	return trueList, falseList
 }
 
-// Reduce accumulae the values starting with the first element and applying the
+// Reduce accumulates the values starting with the first element and applying the
 // operation from left to right to the current accumulator value and each element
 // The input slice must have at least one element.
 func Reduce[T any](s []T, fn func(T, T) T) T {
@@ -249,4 +249,19 @@ func Reduce[T any](s []T, fn func(T, T) T) T {
 		return s[0]
 	}
 	return Fold(s[1:], s[0], fn)
+}
+
+// ReduceIndexed accumulates the values starting with the first element and applying the
+// operation from left to right to the current accumulator value and each element
+// The input slice must have at least one element. The function also receives
+// the index of the element.
+func ReduceIndexed[T any](s []T, fn func(int, T, T) T) T {
+	if len(s) == 1 {
+		return s[0]
+	}
+	acc := s[0]
+	for i, e := range s[1:] {
+		acc = fn(i+1, acc, e)
+	}
+	return acc
 }
