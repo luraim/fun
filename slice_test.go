@@ -384,3 +384,55 @@ func TestDropLast(t *testing.T) {
 		})
 	}
 }
+
+func TestDropLastWhile(t *testing.T) {
+	type args struct {
+		s  []int
+		fn func(int) bool
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{
+			"test dropLastWhile",
+			args{
+				[]int{1, 2, 3, 4, 5, 6},
+				func(i int) bool { return i > 3 },
+			},
+			[]int{1, 2, 3},
+		},
+		{
+			"emtpy list",
+			args{
+				[]int{},
+				func(i int) bool { return i > 3 },
+			},
+			[]int{},
+		},
+		{
+			"drop all",
+			args{
+				[]int{1, 2, 3, 4, 5, 6},
+				func(i int) bool { return i > 0 },
+			},
+			[]int{},
+		},
+		{
+			"drop all but one",
+			args{
+				[]int{1, 2, 3, 4, 5, 6},
+				func(i int) bool { return i > 1 },
+			},
+			[]int{1},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := DropLastWhile(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DropLastWhile() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

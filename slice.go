@@ -133,3 +133,18 @@ func DropLast[T any](s []T, n int) []T {
 	}
 	return s[:len(s)-n]
 }
+
+// DropLastWhile returns a slice containing all elements except the last elements
+// that satisfy the given predicate
+func DropLastWhile[T any](s []T, fn func(T) bool) []T {
+	if len(s) == 0 {
+		return s
+	}
+	i := len(s) - 1
+	for ; i >= 0; i-- {
+		if !fn(s[i]) {
+			break
+		}
+	}
+	return s[:i+1]
+}
