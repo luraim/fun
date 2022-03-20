@@ -291,7 +291,7 @@ func TakeLast[T any](s []T, n int) []T {
 	return s[len(s)-n:]
 }
 
-// TakeLastWhile returns a list containing last elements satisfying the given
+// TakeLastWhile returns a slice containing the last elements satisfying the given
 // predicate
 func TakeLastWhile[T any](s []T, fn func(T) bool) []T {
 	if len(s) == 0 {
@@ -321,7 +321,7 @@ func TakeWhile[T any](s []T, fn func(T) bool) []T {
 	return s[:i]
 }
 
-// Windowed returns a list of sliding windows into the given slice of the
+// Windowed returns a slice of sliding windows into the given slice of the
 // given size, and with the given step
 func Windowed[T any](s []T, size, step int) [][]T {
 	ret := make([][]T, 0)

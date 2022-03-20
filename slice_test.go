@@ -418,6 +418,34 @@ func TestDropWhile(t *testing.T) {
 	}
 }
 
+func TestDropVariants(t *testing.T) {
+	letters := alphabet()
+
+	got := Drop(letters, 23)
+	expected := []rune{'x', 'y', 'z'}
+	if !reflect.DeepEqual(got, expected) {
+		t.Errorf("Drop() = %v want %v", got, expected)
+	}
+
+	got = DropLast(letters, 23)
+	expected = []rune{'a', 'b', 'c'}
+	if !reflect.DeepEqual(got, expected) {
+		t.Errorf("DropLast() = %v want %v", got, expected)
+	}
+
+	got = DropWhile(letters, func(r rune) bool { return r < 'x' })
+	expected = []rune{'x', 'y', 'z'}
+	if !reflect.DeepEqual(got, expected) {
+		t.Errorf("DropWhile() = %v want %v", got, expected)
+	}
+
+	got = DropLastWhile(letters, func(r rune) bool { return r > 'c' })
+	expected = []rune{'a', 'b', 'c'}
+	if !reflect.DeepEqual(got, expected) {
+		t.Errorf("DropLastWhile() = %v want %v", got, expected)
+	}
+}
+
 func TestFilterIndexed(t *testing.T) {
 	type args struct {
 		s  []int
@@ -830,6 +858,14 @@ func TestTakeLast(t *testing.T) {
 	}
 }
 
+func TestTake2(t *testing.T) {
+	got := Take(alphabet(), 2)
+	expected := []rune{'a', 'b'}
+	if !reflect.DeepEqual(got, expected) {
+		t.Errorf("TakeLast() = %v want %v", got, expected)
+	}
+}
+
 func TestTakeLast2(t *testing.T) {
 	got := TakeLast(alphabet(), 2)
 	expected := []rune{'y', 'z'}
@@ -852,14 +888,6 @@ func TestTakeWhile(t *testing.T) {
 	if !reflect.DeepEqual(got, expected) {
 		t.Errorf("TakeWhile() = %v want %v", got, expected)
 	}
-}
-
-func alphabet() []rune {
-	ret := make([]rune, 0)
-	for r := 'a'; r <= 'z'; r++ {
-		ret = append(ret, r)
-	}
-	return ret
 }
 
 func TestWindowed(t *testing.T) {
@@ -939,4 +967,12 @@ func TestWindowed(t *testing.T) {
 			}
 		})
 	}
+}
+
+func alphabet() []rune {
+	ret := make([]rune, 0)
+	for r := 'a'; r <= 'z'; r++ {
+		ret = append(ret, r)
+	}
+	return ret
 }
