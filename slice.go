@@ -125,3 +125,11 @@ func Drop[T any](s []T, n int) []T {
 	}
 	return s[n:]
 }
+
+// DropLast returns a slice containing all elements except the last n
+func DropLast[T any](s []T, n int) []T {
+	if n >= len(s) {
+		return make([]T, 0)
+	}
+	return s[:len(s)-n]
+}

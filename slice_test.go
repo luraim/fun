@@ -336,3 +336,51 @@ func TestDrop(t *testing.T) {
 		})
 	}
 }
+
+func TestDropLast(t *testing.T) {
+	type args struct {
+		s []int
+		n int
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{"drop less than slice length",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+				4,
+			},
+			[]int{1, 2, 3, 4, 5},
+		},
+		{"drop more than slice length",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+				12,
+			},
+			[]int{},
+		},
+		{"drop slice length",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+				9,
+			},
+			[]int{},
+		},
+		{"drop all but last",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+				8,
+			},
+			[]int{1},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := DropLast(tt.args.s, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DropLast() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
