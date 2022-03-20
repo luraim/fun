@@ -3,6 +3,7 @@ package fun
 import (
 	"fmt"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -259,6 +260,78 @@ func TestDistinct(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Distinct(tt.args.s); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Distinct() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestDistinctBy(t *testing.T) {
+	type args struct {
+		s  []string
+		fn func(string) string
+	}
+	tests := []struct {
+		name string
+		args args
+		want []string
+	}{{"test distinctBy",
+		args{[]string{"a", "A", "b", "B", "c", "C"},
+			func(s string) string { return strings.ToLower(s) },
+		},
+		[]string{"a", "b", "c"},
+	}}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := DistinctBy(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DistinctBy() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestDrop(t *testing.T) {
+	type args struct {
+		s []int
+		n int
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{"drop less than slice length",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+				4,
+			},
+			[]int{5, 6, 7, 8, 9},
+		},
+		{"drop more than slice length",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+				12,
+			},
+			[]int{},
+		},
+		{"drop slice length",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+				9,
+			},
+			[]int{},
+		},
+		{"drop all but last",
+			args{
+				[]int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+				8,
+			},
+			[]int{9},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Drop(tt.args.s, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Drop() = %v, want %v", got, tt.want)
 			}
 		})
 	}

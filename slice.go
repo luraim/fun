@@ -99,3 +99,29 @@ func Distinct[T comparable](s []T) []T {
 	}
 	return ret
 }
+
+// DistinctBy returns a slice containing only distinct elements from the
+// given slice as distinguished by the given selector function
+// Elements will retain their original order.
+func DistinctBy[T any, K comparable](s []T, fn func(T) K) []T {
+	m := make(map[K]bool)
+	ret := make([]T, 0)
+	for _, e := range s {
+		k := fn(e)
+		_, ok := m[k]
+		if ok {
+			continue
+		}
+		m[k] = true
+		ret = append(ret, e)
+	}
+	return ret
+}
+
+// Drop returns a slice containing all elements except the first n
+func Drop[T any](s []T, n int) []T {
+	if n >= len(s) {
+		return make([]T, 0)
+	}
+	return s[n:]
+}
