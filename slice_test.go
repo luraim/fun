@@ -669,3 +669,30 @@ func TestPartition(t *testing.T) {
 		})
 	}
 }
+
+func TestReduce(t *testing.T) {
+	type args struct {
+		s  []int
+		fn func(int, int) int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"reduce",
+			args{
+				[]int{1, 2, 3, 4, 5},
+				func(acc, v int) int { return acc + v },
+			},
+			15,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Reduce(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Reduce() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

@@ -240,3 +240,13 @@ func Partition[T any](s []T, fn func(T) bool) ([]T, []T) {
 	}
 	return trueList, falseList
 }
+
+// Reduce accumulae the values starting with the first element and applying the
+// operation from left to right to the current accumulator value and each element
+// The input slice must have at least one element.
+func Reduce[T any](s []T, fn func(T, T) T) T {
+	if len(s) == 1 {
+		return s[0]
+	}
+	return Fold(s[1:], s[0], fn)
+}
