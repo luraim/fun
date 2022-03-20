@@ -320,3 +320,42 @@ func TakeWhile[T any](s []T, fn func(T) bool) []T {
 	}
 	return s[:i]
 }
+
+func Windowed[T any](s []T, size, step int) [][]T {
+	ret := make([][]T, 0)
+	sz := len(s)
+	if sz == 0 {
+		return ret
+	}
+	start := 0
+	end := 0
+	updateEnd := func() {
+		e := start + size
+		if e >= sz {
+			e = sz
+		}
+		end = e
+	}
+	updateStart := func() {
+		s := start + step
+		if s >= sz {
+			s = sz
+		}
+		start = s
+	}
+	updateEnd()
+
+	for {
+		sub := make([]T, 0)
+		for i := start; i < end; i++ {
+			sub = append(sub, s[i])
+		}
+		ret = append(ret, sub)
+		updateStart()
+		updateEnd()
+		if start == end {
+			break
+		}
+	}
+	return ret
+}

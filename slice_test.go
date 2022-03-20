@@ -831,7 +831,7 @@ func TestTakeLast(t *testing.T) {
 }
 
 func TestTakeLast2(t *testing.T) {
-	got := TakeLast(letters(), 2)
+	got := TakeLast(alphabet(), 2)
 	expected := []rune{'y', 'z'}
 	if !reflect.DeepEqual(got, expected) {
 		t.Errorf("TakeLast() = %v want %v", got, expected)
@@ -839,7 +839,7 @@ func TestTakeLast2(t *testing.T) {
 }
 
 func TestTakeLastWhile(t *testing.T) {
-	got := TakeLastWhile(letters(), func(s rune) bool { return s > 'w' })
+	got := TakeLastWhile(alphabet(), func(s rune) bool { return s > 'w' })
 	expected := []rune{'x', 'y', 'z'}
 	if !reflect.DeepEqual(got, expected) {
 		t.Errorf("TakeLastWhile() = %v want %v", got, expected)
@@ -847,17 +847,96 @@ func TestTakeLastWhile(t *testing.T) {
 }
 
 func TestTakeWhile(t *testing.T) {
-	got := TakeWhile(letters(), func(s rune) bool { return s < 'f' })
+	got := TakeWhile(alphabet(), func(s rune) bool { return s < 'f' })
 	expected := []rune{'a', 'b', 'c', 'd', 'e'}
 	if !reflect.DeepEqual(got, expected) {
 		t.Errorf("TakeWhile() = %v want %v", got, expected)
 	}
 }
 
-func letters() []rune {
+func alphabet() []rune {
 	ret := make([]rune, 0)
 	for r := 'a'; r <= 'z'; r++ {
 		ret = append(ret, r)
 	}
 	return ret
+}
+
+func TestWindowed(t *testing.T) {
+	type args struct {
+		s    []int
+		size int
+		step int
+	}
+	input := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	tests := []struct {
+		name string
+		args args
+		want [][]int
+	}{
+		{"size = 5, step = 1",
+			args{input, 5, 1},
+			[][]int{
+				[]int{1, 2, 3, 4, 5},
+				[]int{2, 3, 4, 5, 6},
+				[]int{3, 4, 5, 6, 7},
+				[]int{4, 5, 6, 7, 8},
+				[]int{5, 6, 7, 8, 9},
+				[]int{6, 7, 8, 9, 10},
+				[]int{7, 8, 9, 10},
+				[]int{8, 9, 10},
+				[]int{9, 10},
+				[]int{10},
+			},
+		},
+		{"size = 5, step = 3",
+			args{input, 5, 3},
+			[][]int{
+				[]int{1, 2, 3, 4, 5},
+				[]int{4, 5, 6, 7, 8},
+				[]int{7, 8, 9, 10},
+				[]int{10},
+			},
+		},
+		{"size = 3, step = 4",
+			args{input, 3, 4},
+			[][]int{
+				[]int{1, 2, 3},
+				[]int{5, 6, 7},
+				[]int{9, 10},
+			},
+		},
+
+		{"slice smaller than size",
+			args{[]int{1, 2, 3}, 4, 1},
+			[][]int{
+				[]int{1, 2, 3},
+				[]int{2, 3},
+				[]int{3},
+			},
+		},
+		{"slice smaller than size and step",
+			args{[]int{1, 2, 3}, 4, 4},
+			[][]int{
+				[]int{1, 2, 3},
+			},
+		},
+		{"slice larger than size and smaller than step",
+			args{[]int{1, 2, 3}, 2, 4},
+			[][]int{
+				[]int{1, 2},
+			},
+		},
+		{"empty slice",
+			args{[]int{}, 4, 4},
+			[][]int{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Windowed(tt.args.s, tt.args.size, tt.args.step); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Windowed() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }
