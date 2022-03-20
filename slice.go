@@ -62,3 +62,24 @@ func Associate[T, V any, K comparable](elems []T, fn func(T) (K, V)) map[K]V {
 	}
 	return ret
 }
+
+// Chunked splits the slice into a slice of slices, each not exceeding given size
+// The last slice might have fewer elements than the given size
+func Chunked[T any](s []T, chunkSize int) [][]T {
+	ret := make([][]T, 0)
+	sz := len(s)
+	var sub []T
+	for i := 0; i < sz; i++ {
+		if i%chunkSize == 0 {
+			if len(sub) > 0 {
+				ret = append(ret, sub)
+			}
+			sub = make([]T, 0)
+		}
+		sub = append(sub, s[i])
+	}
+	if len(sub) > 0 {
+		ret = append(ret, sub)
+	}
+	return ret
+}
