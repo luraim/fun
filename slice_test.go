@@ -102,33 +102,6 @@ func TestFilter(t *testing.T) {
 	}
 }
 
-func TestMap(t *testing.T) {
-	type args struct {
-		elems []int
-		fn    func(int) int
-	}
-	tests := []struct {
-		name string
-		args args
-		want []int
-	}{
-		{"test mapping",
-			args{
-				[]int{1, 2, 3, 4, 5},
-				func(i int) int { return i * i },
-			},
-			[]int{1, 4, 9, 16, 25},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Map(tt.args.elems, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Map() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestTake(t *testing.T) {
 	type args struct {
 		elems []int
@@ -598,6 +571,60 @@ func TestGroupBy(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := GroupBy(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GroupBy() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestMap(t *testing.T) {
+	type args struct {
+		elems []int
+		fn    func(int) int
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{"test mapping",
+			args{
+				[]int{1, 2, 3, 4, 5},
+				func(i int) int { return i * i },
+			},
+			[]int{1, 4, 9, 16, 25},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Map(tt.args.elems, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Map() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestMapIndexed(t *testing.T) {
+	type args struct {
+		s  []int
+		fn func(int, int) int
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{"map indexed",
+			args{
+				[]int{1, 2, 3, 4, 5},
+				func(index, i int) int { return index * i },
+			},
+			[]int{0, 2, 6, 12, 20},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := MapIndexed(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("MapIndexed() = %v, want %v", got, tt.want)
 			}
 		})
 	}

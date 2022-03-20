@@ -213,3 +213,14 @@ func Map[T1, T2 any](s []T1, fn func(T1) T2) []T2 {
 	}
 	return ret
 }
+
+// MapIndexed returns the slice obtained after applying the given function over every
+// element in the given slice. The function also receives the index of each
+// element in the slice.
+func MapIndexed[T1, T2 any](s []T1, fn func(int, T1) T2) []T2 {
+	ret := make([]T2, 0)
+	for i, e := range s {
+		ret = append(ret, fn(i, e))
+	}
+	return ret
+}
