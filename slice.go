@@ -51,3 +51,14 @@ func Any[T any](elems []T, fn func(T) bool) bool {
 	}
 	return false
 }
+
+// Associate returns a map containing key-value pairs returned by the given
+// function applied to the elements of the given slice
+func Associate[T, V any, K comparable](elems []T, fn func(T) (K, V)) map[K]V {
+	ret := make(map[K]V)
+	for _, elem := range elems {
+		k, v := fn(elem)
+		ret[k] = v
+	}
+	return ret
+}
