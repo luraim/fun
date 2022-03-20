@@ -1,15 +1,5 @@
 package fun
 
-// Map returns the slice obtained after applying the given function over every
-// element in the given slice
-func Map[T1, T2 any](s []T1, fn func(T1) T2) []T2 {
-	ret := make([]T2, 0)
-	for _, e := range s {
-		ret = append(ret, fn(e))
-	}
-	return ret
-}
-
 // Take returns the slice obtained after taking the first n elements from the
 // given slice.
 // If n is greater than the length of the slice, return the entire slice
@@ -177,6 +167,8 @@ func FilterIndexed[T any](s []T, fn func(int, T) bool) []T {
 	return ret
 }
 
+// Fold accumulates values starting with given initial value and applying
+// given function to current accumulator and each element.
 func Fold[T, R any](s []T, initial R, fn func(R, T) R) R {
 	acc := initial
 	for _, e := range s {
@@ -185,10 +177,39 @@ func Fold[T, R any](s []T, initial R, fn func(R, T) R) R {
 	return acc
 }
 
+// FoldIndexed accumulates values starting with given initial value and applying
+// given function to current accumulator and each element. Function also
+// receives index of current element.
 func FoldIndexed[T, R any](s []T, initial R, fn func(R, int, T) R) R {
 	acc := initial
 	for i, e := range s {
 		acc = fn(acc, i, e)
 	}
 	return acc
+}
+
+// GroupBy returns a map where each key maps to slices of elements all having
+// the same key as returned by given function
+func GroupBy[T any, K comparable](s []T, fn func(T) K) map[K][]T {
+	ret := make(map[K][]T)
+	for _, e := range s {
+		k := fn(e)
+		group, ok := ret[k]
+		if !ok {
+			group = make([]T, 0)
+		}
+		group = append(group, e)
+		ret[k] = group
+	}
+	return ret
+}
+
+// Map returns the slice obtained after applying the given function over every
+// element in the given slice
+func Map[T1, T2 any](s []T1, fn func(T1) T2) []T2 {
+	ret := make([]T2, 0)
+	for _, e := range s {
+		ret = append(ret, fn(e))
+	}
+	return ret
 }

@@ -570,3 +570,35 @@ func TestFoldIndexed(t *testing.T) {
 		})
 	}
 }
+
+func TestGroupBy(t *testing.T) {
+	type args struct {
+		s  []string
+		fn func(string) int
+	}
+	tests := []struct {
+		name string
+		args args
+		want map[int][]string
+	}{
+		{"group by",
+			args{
+				[]string{"a", "abc", "ab", "def", "abcd"},
+				func(str string) int { return len(str) },
+			},
+			map[int][]string{
+				1: []string{"a"},
+				2: []string{"ab"},
+				3: []string{"abc", "def"},
+				4: []string{"abcd"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := GroupBy(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GroupBy() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
