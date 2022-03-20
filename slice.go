@@ -176,3 +176,11 @@ func FilterIndexed[T any](s []T, fn func(int, T) bool) []T {
 	}
 	return ret
 }
+
+func Fold[T, R any](s []T, initial R, fn func(R, T) R) R {
+	acc := initial
+	for _, e := range s {
+		acc = fn(acc, e)
+	}
+	return acc
+}

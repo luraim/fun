@@ -512,3 +512,32 @@ func TestFilterIndexed(t *testing.T) {
 		})
 	}
 }
+
+func TestFold(t *testing.T) {
+	type args struct {
+		s       []int
+		initial int
+		fn      func(int, int) int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"summation by fold",
+			args{
+				[]int{1, 2, 3, 4, 5},
+				0,
+				func(acc, v int) int { return acc + v },
+			},
+			15,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Fold(tt.args.s, tt.args.initial, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Fold() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
