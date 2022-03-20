@@ -290,3 +290,33 @@ func TakeLast[T any](s []T, n int) []T {
 	}
 	return s[len(s)-n:]
 }
+
+// TakeLastWhile returns a list containing last elements satisfying the given
+// predicate
+func TakeLastWhile[T any](s []T, fn func(T) bool) []T {
+	if len(s) == 0 {
+		return s
+	}
+	i := len(s) - 1
+	for ; i >= 0; i-- {
+		if !fn(s[i]) {
+			break
+		}
+	}
+	return s[i+1:]
+}
+
+// TakeWhile returns a list containing the first elements satisfying the
+// given predicate
+func TakeWhile[T any](s []T, fn func(T) bool) []T {
+	if len(s) == 0 {
+		return s
+	}
+	i := 0
+	for ; i < len(s); i++ {
+		if !fn(s[i]) {
+			break
+		}
+	}
+	return s[:i]
+}

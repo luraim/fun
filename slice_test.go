@@ -829,3 +829,35 @@ func TestTakeLast(t *testing.T) {
 		})
 	}
 }
+
+func TestTakeLast2(t *testing.T) {
+	got := TakeLast(letters(), 2)
+	expected := []rune{'y', 'z'}
+	if !reflect.DeepEqual(got, expected) {
+		t.Errorf("TakeLast() = %v want %v", got, expected)
+	}
+}
+
+func TestTakeLastWhile(t *testing.T) {
+	got := TakeLastWhile(letters(), func(s rune) bool { return s > 'w' })
+	expected := []rune{'x', 'y', 'z'}
+	if !reflect.DeepEqual(got, expected) {
+		t.Errorf("TakeLastWhile() = %v want %v", got, expected)
+	}
+}
+
+func TestTakeWhile(t *testing.T) {
+	got := TakeWhile(letters(), func(s rune) bool { return s < 'f' })
+	expected := []rune{'a', 'b', 'c', 'd', 'e'}
+	if !reflect.DeepEqual(got, expected) {
+		t.Errorf("TakeWhile() = %v want %v", got, expected)
+	}
+}
+
+func letters() []rune {
+	ret := make([]rune, 0)
+	for r := 'a'; r <= 'z'; r++ {
+		ret = append(ret, r)
+	}
+	return ret
+}
