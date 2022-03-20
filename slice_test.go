@@ -629,3 +629,43 @@ func TestMapIndexed(t *testing.T) {
 		})
 	}
 }
+
+func TestPartition(t *testing.T) {
+	type person struct {
+		name string
+		age  int
+	}
+	type args struct {
+		s  []*person
+		fn func(*person) bool
+	}
+	tom := &person{"Tom", 18}
+	andy := &person{"Andy", 32}
+	sarah := &person{"Sarah", 22}
+	tests := []struct {
+		name  string
+		args  args
+		want  []*person
+		want1 []*person
+	}{
+		{"partition",
+			args{
+				[]*person{tom, andy, sarah},
+				func(p *person) bool { return p.age < 30 },
+			},
+			[]*person{tom, sarah},
+			[]*person{andy},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := Partition(tt.args.s, tt.args.fn)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Partition() got = %v, want %v", got, tt.want)
+			}
+			if !reflect.DeepEqual(got1, tt.want1) {
+				t.Errorf("Partition() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}
