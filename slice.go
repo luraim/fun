@@ -321,6 +321,8 @@ func TakeWhile[T any](s []T, fn func(T) bool) []T {
 	return s[:i]
 }
 
+// Windowed returns a list of sliding windows into the given slice of the
+// given size, and with the given step
 func Windowed[T any](s []T, size, step int) [][]T {
 	ret := make([][]T, 0)
 	sz := len(s)
