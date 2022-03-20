@@ -541,3 +541,32 @@ func TestFold(t *testing.T) {
 		})
 	}
 }
+
+func TestFoldIndexed(t *testing.T) {
+	type args struct {
+		s       []int
+		initial int
+		fn      func(int, int, int) int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"fold indexed",
+			args{
+				[]int{1, 2, 3, 4, 5},
+				0,
+				func(acc, index, v int) int { return acc + index*v },
+			},
+			40,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := FoldIndexed(tt.args.s, tt.args.initial, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FoldIndexed() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

@@ -184,3 +184,11 @@ func Fold[T, R any](s []T, initial R, fn func(R, T) R) R {
 	}
 	return acc
 }
+
+func FoldIndexed[T, R any](s []T, initial R, fn func(R, int, T) R) R {
+	acc := initial
+	for i, e := range s {
+		acc = fn(acc, i, e)
+	}
+	return acc
+}
