@@ -2,22 +2,10 @@ package fun
 
 // Map returns the slice obtained after applying the given function over every
 // element in the given slice
-func Map[T1, T2 any](elems []T1, fn func(T1) T2) []T2 {
+func Map[T1, T2 any](s []T1, fn func(T1) T2) []T2 {
 	ret := make([]T2, 0)
-	for _, elem := range elems {
-		ret = append(ret, fn(elem))
-	}
-	return ret
-}
-
-// Filter returns the slice obtained after retaining only those elements
-// in the given slice for which the given function returns true
-func Filter[T any](elems []T, fn func(T) bool) []T {
-	ret := make([]T, 0)
-	for _, elem := range elems {
-		if fn(elem) {
-			ret = append(ret, elem)
-		}
+	for _, e := range s {
+		ret = append(ret, fn(e))
 	}
 	return ret
 }
@@ -25,17 +13,17 @@ func Filter[T any](elems []T, fn func(T) bool) []T {
 // Take returns the slice obtained after taking the first n elements from the
 // given slice.
 // If n is greater than the length of the slice, return the entire slice
-func Take[T any](elems []T, n int) []T {
-	if len(elems) <= n {
-		return elems
+func Take[T any](s []T, n int) []T {
+	if len(s) <= n {
+		return s
 	}
-	return elems[:n]
+	return s[:n]
 }
 
 // All returns true if all elements return true for given predicate
-func All[T any](elems []T, fn func(T) bool) bool {
-	for _, elem := range elems {
-		if !fn(elem) {
+func All[T any](s []T, fn func(T) bool) bool {
+	for _, e := range s {
+		if !fn(e) {
 			return false
 		}
 	}
@@ -43,9 +31,9 @@ func All[T any](elems []T, fn func(T) bool) bool {
 }
 
 // Any returns true if at least one element returns true for given predicate
-func Any[T any](elems []T, fn func(T) bool) bool {
-	for _, elem := range elems {
-		if fn(elem) {
+func Any[T any](s []T, fn func(T) bool) bool {
+	for _, e := range s {
+		if fn(e) {
 			return true
 		}
 	}
@@ -54,10 +42,10 @@ func Any[T any](elems []T, fn func(T) bool) bool {
 
 // Associate returns a map containing key-value pairs returned by the given
 // function applied to the elements of the given slice
-func Associate[T, V any, K comparable](elems []T, fn func(T) (K, V)) map[K]V {
+func Associate[T, V any, K comparable](s []T, fn func(T) (K, V)) map[K]V {
 	ret := make(map[K]V)
-	for _, elem := range elems {
-		k, v := fn(elem)
+	for _, e := range s {
+		k, v := fn(e)
 		ret[k] = v
 	}
 	return ret
@@ -162,4 +150,29 @@ func DropWhile[T any](s []T, fn func(T) bool) []T {
 		}
 	}
 	return s[i:]
+}
+
+// Filter returns the slice obtained after retaining only those elements
+// in the given slice for which the given function returns true
+func Filter[T any](s []T, fn func(T) bool) []T {
+	ret := make([]T, 0)
+	for _, e := range s {
+		if fn(e) {
+			ret = append(ret, e)
+		}
+	}
+	return ret
+}
+
+// FilterIndexed returns the slice obtained after retaining only those elements
+// in the given slice for which the given function returns true. Predicate
+// receives the value as well as its index in the slice.
+func FilterIndexed[T any](s []T, fn func(int, T) bool) []T {
+	ret := make([]T, 0)
+	for i, e := range s {
+		if fn(i, e) {
+			ret = append(ret, e)
+		}
+	}
+	return ret
 }

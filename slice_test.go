@@ -485,3 +485,30 @@ func TestDropWhile(t *testing.T) {
 		})
 	}
 }
+
+func TestFilterIndexed(t *testing.T) {
+	type args struct {
+		s  []int
+		fn func(int, int) bool
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{"filter indexed",
+			args{
+				[]int{0, 1, 2, 3, 4, 8, 6},
+				func(index int, v int) bool { return index == v },
+			},
+			[]int{0, 1, 2, 3, 4, 6},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := FilterIndexed(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FilterIndexed() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
