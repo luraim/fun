@@ -4,7 +4,7 @@
 ### Simple generic utility functions to reduce golang boilerplate
 #### Inspired by Kotlin collection functions
 
-##### All
+### All
 - Returns true if all elements return true for given predicate
 ```go
 All([]int{1, 2, 3, 4, 5}, func(i int)bool {return i < 7})
