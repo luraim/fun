@@ -265,3 +265,19 @@ func ReduceIndexed[T any](s []T, fn func(int, T, T) T) T {
 	}
 	return acc
 }
+
+// Reverse reverses the elements of the list in place
+func Reverse[T any](s []T) {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+}
+
+// Reversed returns a new list with the elements in reverse order
+func Reversed[T any](s []T) []T {
+	ret := make([]T, 0)
+	for i := len(s) - 1; i >= 0; i-- {
+		ret = append(ret, s[i])
+	}
+	return ret
+}
