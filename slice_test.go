@@ -238,3 +238,28 @@ func TestChunked(t *testing.T) {
 		})
 	}
 }
+
+func TestDistinct(t *testing.T) {
+	type args struct {
+		s []int
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{"test distinct",
+			args{
+				[]int{1, 1, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5},
+			},
+			[]int{1, 2, 3, 4, 5},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Distinct(tt.args.s); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Distinct() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

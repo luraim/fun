@@ -83,3 +83,19 @@ func Chunked[T any](s []T, chunkSize int) [][]T {
 	}
 	return ret
 }
+
+// Distinct returns a slice containing only distinct elements from the given slice
+// Elements will retain their original order.
+func Distinct[T comparable](s []T) []T {
+	m := make(map[T]bool)
+	ret := make([]T, 0)
+	for _, e := range s {
+		_, ok := m[e]
+		if ok {
+			continue
+		}
+		m[e] = true
+		ret = append(ret, e)
+	}
+	return ret
+}
