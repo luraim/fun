@@ -161,7 +161,7 @@ andy := &person{"Andy", 32}
 sarah := &person{"Sarah", 22}
 
 Partition([]*person{tom, andy, sarah}, func(p *person) bool { return p.age < 30 })
-// [[tom, sarah], [andy]]
+// [tom, sarah], [andy]
 ```
 
 ### Reduce
