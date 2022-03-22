@@ -383,7 +383,7 @@ func Zip[T1 any, T2 any](s1 []T1, s2 []T2) []*Pair[T1, T2] {
 	}
 
 	// Allocate enough space to avoid copies and extra allocations
-	ret := make([]*Pair[T1, T2], 0)
+	ret := make([]*Pair[T1, T2], 0, minLen)
 
 	for i := 0; i < minLen; i++ {
 		ret = append(ret, &Pair[T1, T2]{
