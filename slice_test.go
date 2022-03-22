@@ -905,54 +905,54 @@ func TestWindowed(t *testing.T) {
 		{"size = 5, step = 1",
 			args{input, 5, 1},
 			[][]int{
-				[]int{1, 2, 3, 4, 5},
-				[]int{2, 3, 4, 5, 6},
-				[]int{3, 4, 5, 6, 7},
-				[]int{4, 5, 6, 7, 8},
-				[]int{5, 6, 7, 8, 9},
-				[]int{6, 7, 8, 9, 10},
-				[]int{7, 8, 9, 10},
-				[]int{8, 9, 10},
-				[]int{9, 10},
-				[]int{10},
+				{1, 2, 3, 4, 5},
+				{2, 3, 4, 5, 6},
+				{3, 4, 5, 6, 7},
+				{4, 5, 6, 7, 8},
+				{5, 6, 7, 8, 9},
+				{6, 7, 8, 9, 10},
+				{7, 8, 9, 10},
+				{8, 9, 10},
+				{9, 10},
+				{10},
 			},
 		},
 		{"size = 5, step = 3",
 			args{input, 5, 3},
 			[][]int{
-				[]int{1, 2, 3, 4, 5},
-				[]int{4, 5, 6, 7, 8},
-				[]int{7, 8, 9, 10},
-				[]int{10},
+				{1, 2, 3, 4, 5},
+				{4, 5, 6, 7, 8},
+				{7, 8, 9, 10},
+				{10},
 			},
 		},
 		{"size = 3, step = 4",
 			args{input, 3, 4},
 			[][]int{
-				[]int{1, 2, 3},
-				[]int{5, 6, 7},
-				[]int{9, 10},
+				{1, 2, 3},
+				{5, 6, 7},
+				{9, 10},
 			},
 		},
 
 		{"slice smaller than size",
 			args{[]int{1, 2, 3}, 4, 1},
 			[][]int{
-				[]int{1, 2, 3},
-				[]int{2, 3},
-				[]int{3},
+				{1, 2, 3},
+				{2, 3},
+				{3},
 			},
 		},
 		{"slice smaller than size and step",
 			args{[]int{1, 2, 3}, 4, 4},
 			[][]int{
-				[]int{1, 2, 3},
+				{1, 2, 3},
 			},
 		},
 		{"slice larger than size and smaller than step",
 			args{[]int{1, 2, 3}, 2, 4},
 			[][]int{
-				[]int{1, 2},
+				{1, 2},
 			},
 		},
 		{"empty slice",
@@ -966,6 +966,37 @@ func TestWindowed(t *testing.T) {
 				t.Errorf("Windowed() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestZip(t *testing.T) {
+	s1 := []string{"a", "b", "c", "d"}
+	s2 := []int{1, 2, 3}
+	got := Zip(s1, s2)
+	want := []*Pair[string, int]{
+		{"a", 1},
+		{"b", 2},
+		{"c", 3},
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Zip() = %v, want %v", got, want)
+	}
+}
+
+func TestUnZip(t *testing.T) {
+	ps := []*Pair[string, int]{
+		{"a", 1},
+		{"b", 2},
+		{"c", 3},
+	}
+	want1 := []string{"a", "b", "c"}
+	want2 := []int{1, 2, 3}
+	got1, got2 := Unzip(ps)
+	if !reflect.DeepEqual(got1, want1) {
+		t.Errorf("Zip() first list = %v, want %v", got1, want1)
+	}
+	if !reflect.DeepEqual(got2, want2) {
+		t.Errorf("Zip() first list = %v, want %v", got2, want2)
 	}
 }
 

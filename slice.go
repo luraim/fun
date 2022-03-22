@@ -1,5 +1,7 @@
 package fun
 
+import "fmt"
+
 // All returns true if all elements return true for given predicate
 func All[T any](s []T, fn func(T) bool) bool {
 	for _, e := range s {
@@ -360,4 +362,44 @@ func Windowed[T any](s []T, size, step int) [][]T {
 		}
 	}
 	return ret
+}
+
+// Pair represents a generic pair of two values
+type Pair[T1, T2 any] struct {
+	Fst T1
+	Snd T2
+}
+
+func (p Pair[T1, T2]) String() string {
+	return fmt.Sprintf("(%v, %v)", p.Fst, p.Snd)
+}
+
+// Zip returns a slice of pairs from the elements of both slices with the same
+// index. The returned slice has the length of the shortest input slice
+func Zip[T1 any, T2 any](s1 []T1, s2 []T2) []*Pair[T1, T2] {
+	ret := make([]*Pair[T1, T2], 0)
+	minLen := len(s1)
+	if minLen > len(s2) {
+		minLen = len(s2)
+	}
+	for i := 0; i < minLen; i++ {
+		ret = append(ret, &Pair[T1, T2]{
+			Fst: s1[i],
+			Snd: s2[i],
+		})
+	}
+	return ret
+}
+
+// Unzip returns two slices, where the first slice is built from the first
+// values of each pair from the input slice, and the second slice is built
+// from the second values of each pair
+func Unzip[T1 any, T2 any](ps []*Pair[T1, T2]) ([]T1, []T2) {
+	s1 := make([]T1, 0)
+	s2 := make([]T2, 0)
+	for _, p := range ps {
+		s1 = append(s1, p.Fst)
+		s2 = append(s2, p.Snd)
+	}
+	return s1, s2
 }
