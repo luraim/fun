@@ -107,6 +107,23 @@ FilterIndexed([]int{0, 1, 2, 3, 4, 8, 6}, func(index int, v int) bool {
 // [0, 1, 2, 3, 4, 6]
 ```
 
+### FilterMap
+- FilterMap returns the slice obtained after both filtering and mapping using the given function. 
+- The function should return two values
+        - First, the result of the mapping operation and
+        - Second, whether the element should be included or dropped.
+- This is faster than doing separate filter and map operations, since it avoids extra allocations and slice traversals.
+- Inspired by std::iter::filter_map in Rust
+```go
+FilterMap([]int{1, 2, 3, 4, 5}, func(i int) (int, bool) {
+			if i%2 != 0 {
+				return i, false // drop odd numbers
+			}
+			return i * i, true // square even numbers
+		})
+// [4, 16]
+```
+
 ### Fold
 - Accumulates values starting with given initial value and applying given function to current accumulator and each element.
 ```go
@@ -232,6 +249,15 @@ TakeLastWhile(letters, func(s rune) bool { return s > 'w' })
 // ['x', 'y', 'z']
 ```
 
+### Unzip
+- Returns two slices, where 
+        - the first slice is built from the first values of each pair from the input slice 
+        - and the second slice is built from the second values of each pair
+```go
+Unzip([]*Pair[string, int]{{"a", 1}, {"b", 2}, {"c", 3}})
+// ["a", "b", "c"], [1, 2, 3]
+```
+
 ### Windowed
 - Returns a slice of sliding windows, each of the given size, and with the given step
 - Several last slices may have fewer elements than the given size
@@ -257,4 +283,11 @@ Windowed([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 5, 3)
 //     [7, 8, 9, 10],
 //     [10]
 // ]
+```
+
+### Zip
+- Returns a slice of pairs from the elements of both slices with the same index. - The returned slice has the length of the shortest input slice
+```go
+Zip([]string{"a", "b", "c", "d"}, []int{1, 2, 3})
+// []*Pair[string, int]{{"a", 1}, {"b", 2}, {"c", 3}}
 ```

@@ -159,6 +159,27 @@ func FilterIndexed[T any](s []T, fn func(int, T) bool) []T {
 	return ret
 }
 
+// FilterMap returns the slice obtained after both filtering and mapping using
+// the given function. The function should return two values -
+// first, the result of the mapping operation and
+// second, whether the element should be included or not.
+// This is faster than doing a separate filter and map operations,
+// since it avoids extra allocations and slice traversals.
+func FilterMap[T1, T2 any](
+	s []T1,
+	fn func(T1) (T2, bool),
+) []T2 {
+
+	ret := make([]T2, 0)
+	for _, e := range s {
+		m, ok := fn(e)
+		if ok {
+			ret = append(ret, m)
+		}
+	}
+	return ret
+}
+
 // Fold accumulates values starting with given initial value and applying
 // given function to current accumulator and each element.
 func Fold[T, R any](s []T, initial R, fn func(R, T) R) R {
@@ -323,6 +344,19 @@ func TakeWhile[T any](s []T, fn func(T) bool) []T {
 	return s[:i]
 }
 
+// Unzip returns two slices, where the first slice is built from the first
+// values of each pair from the input slice, and the second slice is built
+// from the second values of each pair
+func Unzip[T1 any, T2 any](ps []*Pair[T1, T2]) ([]T1, []T2) {
+	s1 := make([]T1, 0)
+	s2 := make([]T2, 0)
+	for _, p := range ps {
+		s1 = append(s1, p.Fst)
+		s2 = append(s2, p.Snd)
+	}
+	return s1, s2
+}
+
 // Windowed returns a slice of sliding windows into the given slice of the
 // given size, and with the given step
 func Windowed[T any](s []T, size, step int) [][]T {
@@ -364,16 +398,6 @@ func Windowed[T any](s []T, size, step int) [][]T {
 	return ret
 }
 
-// Pair represents a generic pair of two values
-type Pair[T1, T2 any] struct {
-	Fst T1
-	Snd T2
-}
-
-func (p Pair[T1, T2]) String() string {
-	return fmt.Sprintf("(%v, %v)", p.Fst, p.Snd)
-}
-
 // Zip returns a slice of pairs from the elements of both slices with the same
 // index. The returned slice has the length of the shortest input slice
 func Zip[T1 any, T2 any](s1 []T1, s2 []T2) []*Pair[T1, T2] {
@@ -391,15 +415,12 @@ func Zip[T1 any, T2 any](s1 []T1, s2 []T2) []*Pair[T1, T2] {
 	return ret
 }
 
-// Unzip returns two slices, where the first slice is built from the first
-// values of each pair from the input slice, and the second slice is built
-// from the second values of each pair
-func Unzip[T1 any, T2 any](ps []*Pair[T1, T2]) ([]T1, []T2) {
-	s1 := make([]T1, 0)
-	s2 := make([]T2, 0)
-	for _, p := range ps {
-		s1 = append(s1, p.Fst)
-		s2 = append(s2, p.Snd)
-	}
-	return s1, s2
+// Pair represents a generic pair of two values
+type Pair[T1, T2 any] struct {
+	Fst T1
+	Snd T2
+}
+
+func (p Pair[T1, T2]) String() string {
+	return fmt.Sprintf("(%v, %v)", p.Fst, p.Snd)
 }

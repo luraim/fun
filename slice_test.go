@@ -1000,6 +1000,22 @@ func TestUnZip(t *testing.T) {
 	}
 }
 
+func TestFilterMap(t *testing.T) {
+	s := []int{1, 2, 3, 4, 5}
+	got := FilterMap(s,
+		func(i int) (int, bool) {
+			if i%2 != 0 {
+				return i, false // drop odd numbers
+			}
+			return i * i, true // square even numbers
+		},
+	)
+	want := []int{4, 16}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("FilterMap() = %v, want %v", got, want)
+	}
+}
+
 func alphabet() []rune {
 	ret := make([]rune, 0)
 	for r := 'a'; r <= 'z'; r++ {
