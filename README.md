@@ -285,7 +285,8 @@ Windowed([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 5, 3)
 ```
 
 ### Zip
-- Returns a slice of pairs from the elements of both slices with the same index. - The returned slice has the length of the shortest input slice
+- Returns a slice of pairs from the elements of both slices with the same index
+- The returned slice has the length of the shortest input slice
 ```go
 Zip([]string{"a", "b", "c", "d"}, []int{1, 2, 3})
 // []*Pair[string, int]{{"a", 1}, {"b", 2}, {"c", 3}}
