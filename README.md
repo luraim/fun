@@ -109,9 +109,7 @@ FilterIndexed([]int{0, 1, 2, 3, 4, 8, 6}, func(index int, v int) bool {
 
 ### FilterMap
 - FilterMap returns the slice obtained after both filtering and mapping using the given function. 
-- The function should return two values
-        - First, the result of the mapping operation and
-        - Second, whether the element should be included or dropped.
+- The function should return two values - the result of the mapping operation and whether the element should be included or dropped.
 - This is faster than doing separate filter and map operations, since it avoids extra allocations and slice traversals.
 - Inspired by std::iter::filter_map in Rust
 ```go
