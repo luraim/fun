@@ -249,9 +249,9 @@ TakeLastWhile(letters, func(s rune) bool { return s > 'w' })
 ```
 
 ### Unzip
-- Returns two slices, where 
-        - the first slice is built from the first values of each pair from the input slice 
-        - and the second slice is built from the second values of each pair
+- Returns two slices, where: 
+- the first slice is built from the first values of each pair from the input slice 
+- the second slice is built from the second values of each pair
 ```go
 Unzip([]*Pair[string, int]{{"a", 1}, {"b", 2}, {"c", 3}})
 // ["a", "b", "c"], [1, 2, 3]
