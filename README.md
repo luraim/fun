@@ -113,12 +113,13 @@ FilterIndexed([]int{0, 1, 2, 3, 4, 8, 6}, func(index int, v int) bool {
 - This is faster than doing separate filter and map operations, since it avoids extra allocations and slice traversals.
 - Inspired by std::iter::filter_map in Rust
 ```go
-FilterMap([]int{1, 2, 3, 4, 5}, func(i int) (int, bool) {
-			if i%2 != 0 {
-				return i, false // drop odd numbers
-			}
-			return i * i, true // square even numbers
-		})
+FilterMap([]int{1, 2, 3, 4, 5}, 
+    func(i int) (int, bool) {
+        if i%2 != 0 {
+            return i, false // drop odd numbers
+        }
+        return i * i, true // square even numbers
+    })
 // [4, 16]
 ```
 
