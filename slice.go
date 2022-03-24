@@ -36,7 +36,7 @@ func Associate[T, V any, K comparable](s []T, fn func(T) (K, V)) map[K]V {
 // Chunked splits the slice into a slice of slices, each not exceeding given size
 // The last slice might have fewer elements than the given size
 func Chunked[T any](s []T, chunkSize int) [][]T {
-	ret := make([][]T, 0)
+	ret := make([][]T, 0, len(s))
 	sz := len(s)
 	var sub []T
 	for i := 0; i < sz; i++ {
@@ -44,7 +44,7 @@ func Chunked[T any](s []T, chunkSize int) [][]T {
 			if len(sub) > 0 {
 				ret = append(ret, sub)
 			}
-			sub = make([]T, 0)
+			sub = make([]T, 0, len(s))
 		}
 		sub = append(sub, s[i])
 	}
@@ -58,7 +58,7 @@ func Chunked[T any](s []T, chunkSize int) [][]T {
 // Elements will retain their original order.
 func Distinct[T comparable](s []T) []T {
 	m := make(map[T]bool)
-	ret := make([]T, 0)
+	ret := make([]T, 0, len(s))
 	for _, e := range s {
 		_, ok := m[e]
 		if ok {
@@ -75,7 +75,7 @@ func Distinct[T comparable](s []T) []T {
 // Elements will retain their original order.
 func DistinctBy[T any, K comparable](s []T, fn func(T) K) []T {
 	m := make(map[K]bool)
-	ret := make([]T, 0)
+	ret := make([]T, 0, len(s))
 	for _, e := range s {
 		k := fn(e)
 		_, ok := m[k]
@@ -137,7 +137,7 @@ func DropWhile[T any](s []T, fn func(T) bool) []T {
 // Filter returns the slice obtained after retaining only those elements
 // in the given slice for which the given function returns true
 func Filter[T any](s []T, fn func(T) bool) []T {
-	ret := make([]T, 0)
+	ret := make([]T, 0, len(s))
 	for _, e := range s {
 		if fn(e) {
 			ret = append(ret, e)
@@ -150,7 +150,7 @@ func Filter[T any](s []T, fn func(T) bool) []T {
 // in the given slice for which the given function returns true. Predicate
 // receives the value as well as its index in the slice.
 func FilterIndexed[T any](s []T, fn func(int, T) bool) []T {
-	ret := make([]T, 0)
+	ret := make([]T, 0, len(s))
 	for i, e := range s {
 		if fn(i, e) {
 			ret = append(ret, e)
@@ -209,7 +209,7 @@ func GroupBy[T any, K comparable](s []T, fn func(T) K) map[K][]T {
 		k := fn(e)
 		group, ok := ret[k]
 		if !ok {
-			group = make([]T, 0)
+			group = make([]T, 0, len(s))
 		}
 		group = append(group, e)
 		ret[k] = group
@@ -220,7 +220,7 @@ func GroupBy[T any, K comparable](s []T, fn func(T) K) map[K][]T {
 // Map returns the slice obtained after applying the given function over every
 // element in the given slice
 func Map[T1, T2 any](s []T1, fn func(T1) T2) []T2 {
-	ret := make([]T2, 0)
+	ret := make([]T2, 0, len(s))
 	for _, e := range s {
 		ret = append(ret, fn(e))
 	}
@@ -231,7 +231,7 @@ func Map[T1, T2 any](s []T1, fn func(T1) T2) []T2 {
 // element in the given slice. The function also receives the index of each
 // element in the slice.
 func MapIndexed[T1, T2 any](s []T1, fn func(int, T1) T2) []T2 {
-	ret := make([]T2, 0)
+	ret := make([]T2, 0, len(s))
 	for i, e := range s {
 		ret = append(ret, fn(i, e))
 	}
@@ -242,8 +242,8 @@ func MapIndexed[T1, T2 any](s []T1, fn func(int, T1) T2) []T2 {
 // which the predicate returned true and the second slice contains elements for
 // which it returned false.
 func Partition[T any](s []T, fn func(T) bool) ([]T, []T) {
-	trueList := make([]T, 0)
-	falseList := make([]T, 0)
+	trueList := make([]T, 0, len(s))
+	falseList := make([]T, 0, len(s))
 	for _, e := range s {
 		if fn(e) {
 			trueList = append(trueList, e)
@@ -288,7 +288,7 @@ func Reverse[T any](s []T) {
 
 // Reversed returns a new list with the elements in reverse order
 func Reversed[T any](s []T) []T {
-	ret := make([]T, 0)
+	ret := make([]T, 0, len(s))
 	for i := len(s) - 1; i >= 0; i-- {
 		ret = append(ret, s[i])
 	}
@@ -348,8 +348,9 @@ func TakeWhile[T any](s []T, fn func(T) bool) []T {
 // values of each pair from the input slice, and the second slice is built
 // from the second values of each pair
 func Unzip[T1 any, T2 any](ps []*Pair[T1, T2]) ([]T1, []T2) {
-	s1 := make([]T1, 0)
-	s2 := make([]T2, 0)
+	l := len(ps)
+	s1 := make([]T1, 0, l)
+	s2 := make([]T2, 0, l)
 	for _, p := range ps {
 		s1 = append(s1, p.Fst)
 		s2 = append(s2, p.Snd)
@@ -360,7 +361,7 @@ func Unzip[T1 any, T2 any](ps []*Pair[T1, T2]) ([]T1, []T2) {
 // Windowed returns a slice of sliding windows into the given slice of the
 // given size, and with the given step
 func Windowed[T any](s []T, size, step int) [][]T {
-	ret := make([][]T, 0)
+	ret := make([][]T, 0, len(s))
 	sz := len(s)
 	if sz == 0 {
 		return ret
@@ -384,7 +385,7 @@ func Windowed[T any](s []T, size, step int) [][]T {
 	updateEnd()
 
 	for {
-		sub := make([]T, 0)
+		sub := make([]T, 0, end)
 		for i := start; i < end; i++ {
 			sub = append(sub, s[i])
 		}
@@ -401,11 +402,14 @@ func Windowed[T any](s []T, size, step int) [][]T {
 // Zip returns a slice of pairs from the elements of both slices with the same
 // index. The returned slice has the length of the shortest input slice
 func Zip[T1 any, T2 any](s1 []T1, s2 []T2) []*Pair[T1, T2] {
-	ret := make([]*Pair[T1, T2], 0)
 	minLen := len(s1)
 	if minLen > len(s2) {
 		minLen = len(s2)
 	}
+
+	// Allocate enough space to avoid copies and extra allocations
+	ret := make([]*Pair[T1, T2], 0, minLen)
+
 	for i := 0; i < minLen; i++ {
 		ret = append(ret, &Pair[T1, T2]{
 			Fst: s1[i],
