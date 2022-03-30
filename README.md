@@ -2,7 +2,39 @@
 [![GoDoc](https://godoc.org/github.com/luraim/fun?status.svg)](https://godoc.org/github.com/luraim/fun)
 
 ### Simple generic utility functions to reduce golang boilerplate
-#### Inspired by Kotlin collection functions
+#### Inspired by Kotlin and Rust collection functions
+
+## List of functions
+ - [All](#all)
+ - [Any](#any)
+ - [Associate](#associate)
+ - [Chunked](#chunked)
+ - [Distinct](#distinct)
+ - [DistinctBy](#distinctby)
+ - [Drop](#drop)
+ - [DropLast](#droplast)
+ - [DropWhile](#dropwhile)
+ - [DropLastWhile](#droplastwhile)
+ - [Filter](#filter)
+ - [FilterIndexed](#filterindexed)
+ - [FilterMap](#filtermap)
+ - [Fold](#fold)
+ - [FoldIndexed](#foldindexed)
+ - [GroupBy](#groupby)
+ - [Map](#map)
+ - [MapIndexed](#mapindexed)
+ - [Partition](#partition)
+ - [Reduce](#reduce)
+ - [ReduceIndexed](#reduceindexed)
+ - [Reverse](#reverse)
+ - [Reversed](#reversed)
+ - [Take](#take)
+ - [TakeLast](#takelast)
+ - [TakeWhile](#takewhile)
+ - [TakeLastWhile](#takelastwhile)
+ - [Unzip](#unzip)
+ - [Windowed](#windowed)
+ - [Zip](#zip)
 
 ### All
 - Returns true if all elements return true for given predicate
@@ -13,7 +45,7 @@ All([]int{1, 2, 3, 4, 5}, func(i int)bool {return i < 7})
 All([]int{1, 2, 3, 4, 5}, func(i int)bool {return i % 2 == 0})
 // false
 
-``` 
+```
 
 ### Any
 - Returns true if at least one element returns true for given predicate
@@ -23,7 +55,7 @@ Any([]int{1, 2, 3}, func(i int)bool {return i%2==0})
 
 Any([]int{1, 2, 3}, func(i int)bool {return i > 7})
 // false
-``` 
+```
 
 ### Associate
 - Returns a map containing key-value pairs returned by the given function applied to the elements of the given slice
@@ -53,7 +85,7 @@ Distinct([]int{1, 1, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5})
 - Returns a slice containing only distinct elements from the given slice as distinguished by the given selector function
 ```go
 DistinctBy([]string{"a", "A", "b", "B", "c", "C"},func(s string) string {
-	return strings.ToLower(s) 
+	return strings.ToLower(s)
 })
 // ["a", "b", "c"]
 ```
@@ -62,7 +94,7 @@ DistinctBy([]string{"a", "A", "b", "B", "c", "C"},func(s string) string {
 - Returns a slice containing all elements except the first n.
 ```go
 // letters = ['a'..'z']
-Drop(letters, 23) 
+Drop(letters, 23)
 // ['x', 'y', 'z']
 ```
 
@@ -70,7 +102,7 @@ Drop(letters, 23)
 - Returns a slice containing all elements except the last n.
 ```go
 // letters = ['a'..'z']
-DropLast(letters, 23) 
+DropLast(letters, 23)
 // ['a', 'b', 'c']
 ```
 
@@ -78,7 +110,7 @@ DropLast(letters, 23)
 - Returns a slice containing all elements except the first elements that satisfy the given predicate.
 ```go
 // letters = ['a'..'z']
-DropWhile(letters, func(r rune) bool { return r < 'x' }) 
+DropWhile(letters, func(r rune) bool { return r < 'x' })
 // ['x', 'y', 'z']
 ```
 
@@ -86,7 +118,7 @@ DropWhile(letters, func(r rune) bool { return r < 'x' })
 - Returns a slice containing all elements except the last elements that satisfy the given predicate.
 ```go
 // letters = ['a'..'z']
-DropLastWhile(letters, func(r rune) bool { return r > 'c' }) 
+DropLastWhile(letters, func(r rune) bool { return r > 'c' })
 // ['a', 'b', 'c']
 ```
 
@@ -101,19 +133,19 @@ Filter([]int{1, 2, 3, 4, 5, 6, 7, 8}, func(i int)bool {return i%2==0})
 - Returns the slice obtained after retaining only those elements in the given slice for which the given function returns true
 - Predicate function receives the value as well as its index in the slice.
 ```go
-FilterIndexed([]int{0, 1, 2, 3, 4, 8, 6}, func(index int, v int) bool { 
-	return index == v 
+FilterIndexed([]int{0, 1, 2, 3, 4, 8, 6}, func(index int, v int) bool {
+	return index == v
 })
 // [0, 1, 2, 3, 4, 6]
 ```
 
 ### FilterMap
-- FilterMap returns the slice obtained after both filtering and mapping using the given function. 
+- FilterMap returns the slice obtained after both filtering and mapping using the given function.
 - The function should return two values - the result of the mapping operation and whether the element should be included or dropped.
 - This is faster than doing separate filter and map operations, since it avoids extra allocations and slice traversals.
 - Inspired by std::iter::filter_map in Rust
 ```go
-FilterMap([]int{1, 2, 3, 4, 5}, 
+FilterMap([]int{1, 2, 3, 4, 5},
     func(i int) (int, bool) {
         if i%2 != 0 {
             return i, false // drop odd numbers
@@ -135,7 +167,7 @@ Fold([]int{1, 2, 3, 4, 5}, func(acc, v int) int { return acc + v })
 - Function also receives index of current element.
 ```go
 FoldIndexed([]int{1, 2, 3, 4, 5}, func(index, acc, v int) int {
-	return acc + index*v 
+	return acc + index*v
 })
 // 40
 ```
@@ -143,8 +175,8 @@ FoldIndexed([]int{1, 2, 3, 4, 5}, func(index, acc, v int) int {
 ### GroupBy
 - Returns a map where each key maps to slices of elements all having the same key as returned by the given function
 ```go
-GroupBy([]string{"a", "abc", "ab", "def", "abcd"}, func(s string) int { 
-	return len(s) 
+GroupBy([]string{"a", "abc", "ab", "def", "abcd"}, func(s string) int {
+	return len(s)
 })
 // {1: ["a"], 2: ["ab"], 3: ["abc", "def"], 4: ["abcd"]},
 ```
@@ -202,7 +234,7 @@ ReduceIndexed([]string{"a", "b", "c", "d"}, func(index int, acc, v string) strin
 ### Reverse
 - Reverses the elements of the list in place.
 ```go
-// s = [1, 2, 3, 4, 5, 6, 7] 
+// s = [1, 2, 3, 4, 5, 6, 7]
 Reverse(s)
 // s = [7, 6, 5, 4, 3, 2, 1]
 ```
@@ -210,10 +242,10 @@ Reverse(s)
 ### Reversed
 - Returns a new list with the elements in reverse order.
 ```go
-// s = [1, 2, 3, 4, 5, 6, 7] 
-r := Reversed(s) 
+// s = [1, 2, 3, 4, 5, 6, 7]
+r := Reversed(s)
 // r = [7, 6, 5, 4, 3, 2, 1]
-// s = [1, 2, 3, 4, 5, 6, 7] 
+// s = [1, 2, 3, 4, 5, 6, 7]
 ```
 
 ### Take
@@ -249,8 +281,8 @@ TakeLastWhile(letters, func(s rune) bool { return s > 'w' })
 ```
 
 ### Unzip
-- Returns two slices, where: 
-- the first slice is built from the first values of each pair from the input slice 
+- Returns two slices, where:
+- the first slice is built from the first values of each pair from the input slice
 - the second slice is built from the second values of each pair
 ```go
 Unzip([]*Pair[string, int]{{"a", 1}, {"b", 2}, {"c", 3}})
