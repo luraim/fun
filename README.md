@@ -2,7 +2,8 @@
 [![GoDoc](https://godoc.org/github.com/luraim/fun?status.svg)](https://godoc.org/github.com/luraim/fun)
 
 ### Simple generic utility functions to reduce golang boilerplate
-#### Inspired by Kotlin and Rust collection functions
+- Inspired by Kotlin and Rust collection functions
+- Supplement to the generic functions in golang.org/x/exp/slices and golang.org/x/exp/maps
 
 ## List of functions
  - [All](#all)
