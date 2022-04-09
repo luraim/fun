@@ -1023,3 +1023,34 @@ func alphabet() []rune {
 	}
 	return ret
 }
+
+func TestGetOrInsert(t *testing.T) {
+
+	m := map[int]int{1: 10, 2: 20}
+	fn := func(k int) int { return k * 10 }
+
+	// case where key is present
+	expected := 20
+	got := GetOrInsert(m, 2, fn)
+	if got != expected {
+		t.Errorf("GetOrInsert() = %d expected = %d", got, expected)
+	}
+
+	// case where key is not present, but populated by invoking the function
+	expected = 30
+	got = GetOrInsert(m, 3, fn)
+	if got != expected {
+		t.Errorf("GetOrInsert() = %d expected = %d", got, expected)
+	}
+
+	// check that the new value was stored in the map as well
+	expected = 30
+	got, ok := m[3]
+	if !ok {
+		t.Errorf("GetOrInsert did not insert new value in map!!")
+	}
+	if got != expected {
+		t.Errorf("value in map = %d expected = %d", got, expected)
+	}
+
+}

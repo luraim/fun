@@ -20,6 +20,7 @@
  - [FilterMap](#filtermap)
  - [Fold](#fold)
  - [FoldIndexed](#foldindexed)
+ - [GetOrInsert](#GetOrInsert)
  - [GroupBy](#groupby)
  - [Map](#map)
  - [MapIndexed](#mapindexed)
@@ -171,6 +172,16 @@ FoldIndexed([]int{1, 2, 3, 4, 5}, func(index, acc, v int) int {
 })
 // 40
 ```
+
+### GetOrInsert 
+- checks if a value corresponding to the given key is present in the map. 
+- If present it returns the existing value. 
+- If not present, it invokes the given callback function to get a new value for the given key, inserts it in the map and returns the new value
+```go
+m := map[int]int{1:10, 2:20}
+GetOrInsert(m, 3, func(i int) int {return i * 10})
+// returns 30; m is updated to {1:10, 2:20, 3:30},
+```  
 
 ### GroupBy
 - Returns a map where each key maps to slices of elements all having the same key as returned by the given function

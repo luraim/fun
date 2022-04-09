@@ -201,6 +201,22 @@ func FoldIndexed[T, R any](s []T, initial R, fn func(int, R, T) R) R {
 	return acc
 }
 
+// GetOrInsert checks if a value corresponding to the given key is present
+// in the map. If present it returns the existing value. If not, it invokes the
+// given callback function to get a new value for the given key, inserts it in
+// the map and returns the new value
+func GetOrInsert[M ~map[K]V, K comparable, V any](m M, k K, fn func(K) V) V {
+	v, ok := m[k]
+	if ok {
+		// present, return existing value
+		return v
+	}
+	// not present; get value, insert in map and return the new value
+	v = fn(k)
+	m[k] = v
+	return v
+}
+
 // GroupBy returns a map where each key maps to slices of elements all having
 // the same key as returned by given function
 func GroupBy[T any, K comparable](s []T, fn func(T) K) map[K][]T {
