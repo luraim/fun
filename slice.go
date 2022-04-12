@@ -181,38 +181,38 @@ func FilterMap[T1, T2 any](
 }
 
 // Fold accumulates values starting with given initial value and applying
-// given function to current accumulator and each element. The intial/accumulator
-// value must be a reference type, that can be updated by the folding function.
-func Fold[T, R any](s []T, initial R, fn func(R, T)) {
+// given function to current accumulator and each element.
+func Fold[T, R any](s []T, initial R, fn func(R, T) R) R {
 	acc := initial
 	for _, e := range s {
-		fn(acc, e)
+		acc = fn(acc, e)
 	}
+	return acc
 }
 
 // FoldIndexed accumulates values starting with given initial value and applying
 // given function to current accumulator and each element. Function also
-// receives index of current element. The intial/accumulator
-// value must be a reference type, that can be updated by the folding function.
-func FoldIndexed[T, R any](s []T, initial R, fn func(int, R, T)) {
+// receives index of current element.
+func FoldIndexed[T, R any](s []T, initial R, fn func(int, R, T) R) R {
 	acc := initial
 	for i, e := range s {
-		fn(i, acc, e)
+		acc = fn(i, acc, e)
 	}
+	return acc
 }
 
 // FoldItems accumulates values starting with given intial value and applying
-// given function to current accumulator and each key, value. The intial/accumulator
-// value must be a reference type, that can be updated by the folding function.
+// given function to current accumulator and each key, value.
 func FoldItems[M ~map[K]V, K comparable, V, R any](
 	m M,
 	initial R,
-	fn func(R, K, V),
-) {
+	fn func(R, K, V) R,
+) R {
 	acc := initial
 	for k, v := range m {
-		fn(acc, k, v)
+		acc = fn(acc, k, v)
 	}
+	return acc
 }
 
 // GetOrInsert checks if a value corresponding to the given key is present
@@ -282,6 +282,31 @@ func Partition[T any](s []T, fn func(T) bool) ([]T, []T) {
 		}
 	}
 	return trueList, falseList
+}
+
+// Reduce accumulates the values starting with the first element and applying the
+// operation from left to right to the current accumulator value and each element
+// The input slice must have at least one element.
+func Reduce[T any](s []T, fn func(T, T) T) T {
+	if len(s) == 1 {
+		return s[0]
+	}
+	return Fold(s[1:], s[0], fn)
+}
+
+// ReduceIndexed accumulates the values starting with the first element and applying the
+// operation from left to right to the current accumulator value and each element
+// The input slice must have at least one element. The function also receives
+// the index of the element.
+func ReduceIndexed[T any](s []T, fn func(int, T, T) T) T {
+	if len(s) == 1 {
+		return s[0]
+	}
+	acc := s[0]
+	for i, e := range s[1:] {
+		acc = fn(i+1, acc, e)
+	}
+	return acc
 }
 
 // Reverse reverses the elements of the list in place

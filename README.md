@@ -27,6 +27,8 @@
  - [Map](#map)
  - [MapIndexed](#mapindexed)
  - [Partition](#partition)
+ - [Reduce](#reduce)
+ - [ReduceIndexed](#reduceindexed)
  - [Reverse](#reverse)
  - [Reversed](#reversed)
  - [Take](#take)
@@ -158,7 +160,6 @@ FilterMap([]int{1, 2, 3, 4, 5},
 
 ### Fold
 - Accumulates values starting with given initial value and applying given function to current accumulator and each element of the given slice.
-- The intial/accumulator value must be a reference type, that can be updated by the folding function.
 ```go
 Fold([]int{1, 2, 3, 4, 5}, func(acc, v int) int { return acc + v })
 // 15
@@ -166,7 +167,6 @@ Fold([]int{1, 2, 3, 4, 5}, func(acc, v int) int { return acc + v })
 
 ### FoldIndexed
 - Accumulates values starting with given initial value and applying given function to current accumulator and each element of the given slice.
-- The intial/accumulator value must be a reference type, that can be updated by the folding function.
 - Function also receives index of current element.
 ```go
 FoldIndexed([]int{1, 2, 3, 4, 5}, func(index, acc, v int) int {
@@ -177,7 +177,6 @@ FoldIndexed([]int{1, 2, 3, 4, 5}, func(index, acc, v int) int {
 
 ### FoldItems
 - Accumulates values starting with given intial value and applying given function to current accumulator and each key, value of the given map.
-- The intial/accumulator value must be a reference type, that can be updated by the folding function.
 - Accumulator can be of any reference type.
 ```go
 m := map[int]int{1: 10, 2: 20, 3: 30}
@@ -236,6 +235,25 @@ sarah := &person{"Sarah", 22}
 
 Partition([]*person{tom, andy, sarah}, func(p *person) bool { return p.age < 30 })
 // [tom, sarah], [andy]
+```
+
+### Reduce
+- Accumulates the values starting with the first element and applying the operation from left to right to the current accumulator value and each element.
+- The input slice must have at least one element.
+```go
+Reduce([]int{1, 2, 3, 4, 5}, func(acc, v int) int { return acc + v })
+// 15
+```
+
+### ReduceIndexed
+- Accumulates the values starting with the first element and applying the operation from left to right to the current accumulator value and each element.
+- The input slice must have at least one element.
+- The function also receives the index of each element.
+```go
+ReduceIndexed([]string{"a", "b", "c", "d"}, func(index int, acc, v string) string {
+    return fmt.Sprintf("%s%s%d", acc, v, index)
+})
+// "ab1c2d3"
 ```
 
 ### Reverse
