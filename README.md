@@ -159,20 +159,32 @@ FilterMap([]int{1, 2, 3, 4, 5},
 ```
 
 ### Fold
-- Accumulates values starting with given initial value and applying given function to current accumulator and each element.
+- Accumulates values starting with given initial value and applying given function to current accumulator and each element of the given slice.
 ```go
 Fold([]int{1, 2, 3, 4, 5}, func(acc, v int) int { return acc + v })
 // 15
 ```
 
 ### FoldIndexed
-- Accumulates values starting with given initial value and applying given function to current accumulator and each element.
+- Accumulates values starting with given initial value and applying given function to current accumulator and each element of the given slice.
 - Function also receives index of current element.
 ```go
 FoldIndexed([]int{1, 2, 3, 4, 5}, func(index, acc, v int) int {
 	return acc + index*v
 })
 // 40
+```
+
+### FoldItems
+- Accumulates values starting with given intial value and applying given function to current accumulator and each key, value of the given map.
+- Accumulator can be of any reference type.
+```go
+m := map[int]int{1: 10, 2: 20, 3: 30}
+FoldItems(m, func(acc map[string]string, k, v int) map[string]string {
+    acc[fmt.Sprintf("entry_%d", k)] = fmt.Sprintf("%d->%d", k, v)
+    return acc
+})
+// {"entry_1": "1->10", "entry_2": "2->20", "entry_3": "3->30"}
 ```
 
 ### GetOrInsert 
