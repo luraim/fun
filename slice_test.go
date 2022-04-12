@@ -1054,3 +1054,40 @@ func TestGetOrInsert(t *testing.T) {
 	}
 
 }
+
+func TestFoldItems(t *testing.T) {
+	type args struct {
+		m       map[int]int
+		initial map[string]string
+		fn      func(map[string]string, int, int) map[string]string
+	}
+	tests := []struct {
+		name string
+		args args
+		want map[string]string
+	}{
+		{
+			"test fold over map items",
+			args{
+				map[int]int{1: 10, 2: 20, 3: 30},
+				make(map[string]string),
+				func(acc map[string]string, k, v int) map[string]string {
+					acc[fmt.Sprintf("entry_%d", k)] = fmt.Sprintf("%d->%d", k, v)
+					return acc
+				},
+			},
+			map[string]string{
+				"entry_1": "1->10",
+				"entry_2": "2->20",
+				"entry_3": "3->30",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := FoldItems(tt.args.m, tt.args.initial, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FoldItems() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

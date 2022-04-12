@@ -201,6 +201,20 @@ func FoldIndexed[T, R any](s []T, initial R, fn func(int, R, T) R) R {
 	return acc
 }
 
+// FoldItems accumulates values starting with given intial value and applying
+// given function to current accumulator and each key, value.
+func FoldItems[M ~map[K]V, K comparable, V, R any](
+	m M,
+	initial R,
+	fn func(R, K, V) R,
+) R {
+	acc := initial
+	for k, v := range m {
+		acc = fn(acc, k, v)
+	}
+	return acc
+}
+
 // GetOrInsert checks if a value corresponding to the given key is present
 // in the map. If present it returns the existing value. If not, it invokes the
 // given callback function to get a new value for the given key, inserts it in

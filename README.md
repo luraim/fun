@@ -21,6 +21,7 @@
  - [FilterMap](#filtermap)
  - [Fold](#fold)
  - [FoldIndexed](#foldindexed)
+ - [FoldItems](#folditems)
  - [GetOrInsert](#GetOrInsert)
  - [GroupBy](#groupby)
  - [Map](#map)
