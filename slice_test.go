@@ -474,63 +474,43 @@ func TestFilterIndexed(t *testing.T) {
 }
 
 func TestFold(t *testing.T) {
-	type args struct {
-		s       []int
-		initial int
-		fn      func(int, int) int
-	}
-	tests := []struct {
-		name string
-		args args
-		want int
-	}{
-		{"summation by fold",
-			args{
-				[]int{1, 2, 3, 4, 5},
-				0,
-				func(acc, v int) int { return acc + v },
-			},
-			15,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Fold(tt.args.s, tt.args.initial, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Fold() = %v, want %v", got, tt.want)
-			}
-		})
+	s := []int{1, 2, 3, 4, 5}
+	fn := func(acc *int, v int) { *acc += v }
+	sum := 0
+	Fold(s, &sum, fn)
+	expected := 15
+	if sum != expected {
+		t.Errorf("Fold() = %d want %d", sum, expected)
 	}
 }
 
 func TestFoldIndexed(t *testing.T) {
-	type args struct {
-		s       []int
-		initial int
-		fn      func(int, int, int) int
-	}
-	tests := []struct {
-		name string
-		args args
-		want int
-	}{
-		{"fold indexed",
-			args{
-				[]int{1, 2, 3, 4, 5},
-				0,
-				func(index, acc, v int) int { return acc + index*v },
-			},
-			40,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := FoldIndexed(tt.args.s, tt.args.initial, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FoldIndexed() = %v, want %v", got, tt.want)
-			}
-		})
+	s := []int{1, 2, 3, 4, 5}
+	fn := func(index int, acc *int, v int) { *acc += index * v }
+	sum := 0
+	FoldIndexed(s, &sum, fn)
+	expected := 40
+	if sum != expected {
+		t.Errorf("FoldIndexed() = %d want %d", sum, expected)
 	}
 }
 
+func TestFoldItems(t *testing.T) {
+	m := map[int]int{1: 10, 2: 20, 3: 30}
+	res := make(map[string]string)
+	fn := func(acc map[string]string, k, v int) {
+		acc[fmt.Sprintf("entry_%d", k)] = fmt.Sprintf("%d->%d", k, v)
+	}
+	FoldItems(m, res, fn)
+	expected := map[string]string{
+		"entry_1": "1->10",
+		"entry_2": "2->20",
+		"entry_3": "3->30",
+	}
+	if !reflect.DeepEqual(expected, res) {
+		t.Errorf("FoldItems() = %v want %v", res, expected)
+	}
+}
 func TestGroupBy(t *testing.T) {
 	type args struct {
 		s  []string
@@ -652,63 +632,6 @@ func TestPartition(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("Partition() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
-}
-
-func TestReduce(t *testing.T) {
-	type args struct {
-		s  []int
-		fn func(int, int) int
-	}
-	tests := []struct {
-		name string
-		args args
-		want int
-	}{
-		{"reduce",
-			args{
-				[]int{1, 2, 3, 4, 5},
-				func(acc, v int) int { return acc + v },
-			},
-			15,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Reduce(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Reduce() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestReduceIndexed(t *testing.T) {
-	type args struct {
-		s  []string
-		fn func(int, string, string) string
-	}
-	tests := []struct {
-		name string
-		args args
-		want string
-	}{
-		{"reduce indexed",
-			args{
-				[]string{"a", "b", "c", "d"},
-				func(index int, acc, v string) string {
-					return fmt.Sprintf("%s%s%d", acc, v, index)
-				},
-			},
-
-			"ab1c2d3",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := ReduceIndexed(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ReduceIndexed() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -1053,41 +976,4 @@ func TestGetOrInsert(t *testing.T) {
 		t.Errorf("value in map = %d expected = %d", got, expected)
 	}
 
-}
-
-func TestFoldItems(t *testing.T) {
-	type args struct {
-		m       map[int]int
-		initial map[string]string
-		fn      func(map[string]string, int, int) map[string]string
-	}
-	tests := []struct {
-		name string
-		args args
-		want map[string]string
-	}{
-		{
-			"test fold over map items",
-			args{
-				map[int]int{1: 10, 2: 20, 3: 30},
-				make(map[string]string),
-				func(acc map[string]string, k, v int) map[string]string {
-					acc[fmt.Sprintf("entry_%d", k)] = fmt.Sprintf("%d->%d", k, v)
-					return acc
-				},
-			},
-			map[string]string{
-				"entry_1": "1->10",
-				"entry_2": "2->20",
-				"entry_3": "3->30",
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := FoldItems(tt.args.m, tt.args.initial, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FoldItems() = %v, want %v", got, tt.want)
-			}
-		})
-	}
 }
