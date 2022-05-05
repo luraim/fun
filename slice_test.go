@@ -531,36 +531,64 @@ func TestFoldIndexed(t *testing.T) {
 	}
 }
 
-func TestGroupBy(t *testing.T) {
-	type args struct {
-		s  []string
-		fn func(string) int
+func TestGroupByWithOriginalTypesForKeyAndValue(t *testing.T) {
+
+	input := []string{"a", "abc", "ab", "def", "abcd"}
+	want := map[int][]string{
+		1: {"a"},
+		2: {"ab"},
+		3: {"abc", "def"},
+		4: {"abcd"},
 	}
-	tests := []struct {
-		name string
-		args args
-		want map[int][]string
-	}{
-		{"group by",
-			args{
-				[]string{"a", "abc", "ab", "def", "abcd"},
-				func(str string) int { return len(str) },
-			},
-			map[int][]string{
-				1: []string{"a"},
-				2: []string{"ab"},
-				3: []string{"abc", "def"},
-				4: []string{"abcd"},
-			},
-		},
+	got := GroupBy(input, func(str string) (int, string) {
+		return len(str), str
+	})
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("GroupBy() = %v, want %v", got, want)
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := GroupBy(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("GroupBy() = %v, want %v", got, tt.want)
+}
+
+type wrapped struct {
+	value string
+}
+
+func (w wrapped) String() string {
+	return fmt.Sprintf("Wrapped:'%s'", w.value)
+}
+
+func TestGroupByWithNewTypesForKeyAndValue(t *testing.T) {
+
+	input := []string{"a", "abc", "ab", "def", "abcd"}
+	want := map[float64][]*wrapped{
+		10.0: {&wrapped{"a"}},
+		20.0: {&wrapped{"ab"}},
+		30.0: {&wrapped{"abc"}, &wrapped{"def"}},
+		40.0: {&wrapped{"abcd"}},
+	}
+	got := GroupBy(input, func(str string) (float64, *wrapped) {
+		return float64(len(str)) * 10.0, &wrapped{str}
+	})
+	for k, vs := range want {
+		avs, ok := got[k]
+		if !ok {
+			t.Errorf("expected key '%v' not found", k)
+			return
+		}
+		if len(vs) != len(avs) {
+			t.Errorf("expected %d elements for key:'%v'. got %d",
+				len(vs), k, len(avs))
+			return
+		}
+		for i := 0; i < len(vs); i++ {
+			av := avs[i]
+			v := vs[i]
+			if av.value != v.value {
+				t.Errorf("expected value: %s, got %s", v, av)
 			}
-		})
+		}
+
 	}
+
 }
 
 func TestMap(t *testing.T) {

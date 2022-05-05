@@ -200,8 +200,8 @@ GetOrInsert(m, 3, func(i int) int {return i * 10})
 ### GroupBy
 - Returns a map where each key maps to slices of elements all having the same key as returned by the given function
 ```go
-GroupBy([]string{"a", "abc", "ab", "def", "abcd"}, func(s string) int {
-	return len(s)
+GroupBy([]string{"a", "abc", "ab", "def", "abcd"}, func(s string) (int,string) {
+	return len(s), s
 })
 // {1: ["a"], 2: ["ab"], 3: ["abc", "def"], 4: ["abcd"]},
 ```

@@ -231,18 +231,21 @@ func GetOrInsert[M ~map[K]V, K comparable, V any](m M, k K, fn func(K) V) V {
 	return v
 }
 
-// GroupBy returns a map where each key maps to slices of elements all having
-// the same key as returned by given function
-func GroupBy[T any, K comparable](s []T, fn func(T) K) map[K][]T {
-	ret := make(map[K][]T)
+// GroupBy returns a map containing key to list of values
+// returned by the given function applied to the elements of the given slice
+func GroupBy[T, V any, K comparable](
+	s []T,
+	fn func(T) (K, V),
+) map[K][]V {
+	ret := make(map[K][]V)
 	for _, e := range s {
-		k := fn(e)
-		group, ok := ret[k]
+		k, v := fn(e)
+		lst, ok := ret[k]
 		if !ok {
-			group = make([]T, 0)
+			lst = make([]V, 0)
 		}
-		group = append(group, e)
-		ret[k] = group
+		lst = append(lst, v)
+		ret[k] = lst
 	}
 	return ret
 }
