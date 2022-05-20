@@ -172,6 +172,23 @@ func TestChunked(t *testing.T) {
 	}
 }
 
+func TestChunkedBy(t *testing.T) {
+	input := []int{10, 20, 30, 40, 31, 31, 33, 34, 21, 22, 23, 24, 11, 12, 13, 14}
+	output := ChunkedBy(input, func(prev, next int) bool {
+		return prev < next
+	})
+	expected := [][]int{
+		{10, 20, 30, 40},
+		{31},
+		{31, 33, 34},
+		{21, 22, 23, 24},
+		{11, 12, 13, 14},
+	}
+	if !reflect.DeepEqual(output, expected) {
+		t.Errorf("ChunkedBy() = %v, want %v", output, expected)
+	}
+}
+
 func TestDistinct(t *testing.T) {
 	type args struct {
 		s []int

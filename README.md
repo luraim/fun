@@ -10,6 +10,7 @@
  - [Any](#any)
  - [Associate](#associate)
  - [Chunked](#chunked)
+ - [ChunkedBy](#chunkedby)
  - [Distinct](#distinct)
  - [DistinctBy](#distinctby)
  - [Drop](#drop)
@@ -75,6 +76,15 @@ Associate([]int{1, 2, 3, 4}, func(i int) (string, int) {
 ```go
 Chunked([]int{1, 2, 3, 4, 5, 6, 7, 8, 9}, 2)
 // [[1, 2], [3, 4], [5, 6], [7, 8], [9]]
+```
+
+### ChunkedBy
+- Splits the slice into a slice of slices, starting a new sub slice whenever the callback function returns false.
+- The callback function is passed the previous and current element. 
+```go
+input := []int{10, 20, 30, 40, 31, 31, 33, 34, 21, 22, 23, 24, 11, 12, 13, 14}
+ChunkedBy(input, func(prev, next int) bool { return prev < next})
+// [[10, 20, 30, 40], [31], [31, 33, 34], [21, 22, 23, 24], [11, 12, 13, 14]]
 ```
 
 ### Distinct

@@ -54,6 +54,31 @@ func Chunked[T any](s []T, chunkSize int) [][]T {
 	return ret
 }
 
+func ChunkedBy[T any](s []T, fn func(T, T) bool) [][]T {
+	ret := make([][]T, 0)
+	switch len(s) {
+	case 0:
+		return ret
+	case 1:
+		ret = append(ret, []T{s[0]})
+		return ret
+	}
+	var currentSubList = []T{s[0]}
+	for _, e := range s[1:] {
+		if fn(currentSubList[len(currentSubList)-1], e) {
+			currentSubList = append(currentSubList, e)
+		} else {
+			// save current sub list and start a new one
+			ret = append(ret, currentSubList)
+			currentSubList = []T{e}
+		}
+	}
+	if len(currentSubList) > 0 {
+		ret = append(ret, currentSubList)
+	}
+	return ret
+}
+
 // Distinct returns a slice containing only distinct elements from the given slice
 // Elements will retain their original order.
 func Distinct[T comparable](s []T) []T {
