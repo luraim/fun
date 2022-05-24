@@ -41,6 +41,24 @@ func TestAll(t *testing.T) {
 	}
 }
 
+func TestAppendToGroup(t *testing.T) {
+	grp := make(map[string][]int)
+	AppendToGroup(grp, "a", 1)
+	AppendToGroup(grp, "b", 2)
+	AppendToGroup(grp, "a", 10)
+	AppendToGroup(grp, "b", 20)
+	AppendToGroup(grp, "a", 100)
+	AppendToGroup(grp, "b", 200)
+
+	want := map[string][]int{
+		"a": {1, 10, 100},
+		"b": {2, 20, 200},
+	}
+	if !reflect.DeepEqual(grp, want) {
+		t.Errorf("AppendToGroup() = %v, want %v", grp, want)
+	}
+}
+
 func TestAny(t *testing.T) {
 	type args struct {
 		elems []int

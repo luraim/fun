@@ -4,10 +4,12 @@
 ### Simple generic utility functions to reduce golang boilerplate
 - Inspired by Kotlin and Rust collection functions
 - Supplement to the generic functions in golang.org/x/exp/slices and golang.org/x/exp/maps
+- Note: The Go compiler does not currently inline generic callback functions. So please apply your judgement while using functions from this library that involve callbacks. Use them when the expressiveness is worth any performance degration compared to handcoded *for loop* boilerplate.
 
 ## List of functions
  - [All](#all)
  - [Any](#any)
+ - [AppendToGroup](#appendtogroup)
  - [Associate](#associate)
  - [Chunked](#chunked)
  - [ChunkedBy](#chunkedby)
@@ -59,6 +61,21 @@ Any([]int{1, 2, 3}, func(i int)bool {return i%2==0})
 
 Any([]int{1, 2, 3}, func(i int)bool {return i > 7})
 // false
+```
+
+### AppendToGroup
+- Adds the key, value to the given map where each key maps to a slice of values
+```go
+group := make(map[string][]int)
+
+AppendToGroup(grp, "a", 1)
+AppendToGroup(grp, "b", 2)
+AppendToGroup(grp, "a", 10)
+AppendToGroup(grp, "b", 20)
+AppendToGroup(grp, "a", 100)
+AppendToGroup(grp, "b", 200)
+
+// {"a":[1, 10, 100], "b":[2, 20, 200]}
 ```
 
 ### Associate
