@@ -1154,3 +1154,61 @@ func TestFoldItems(t *testing.T) {
 		})
 	}
 }
+
+func TestTransformMap(t *testing.T) {
+	type args struct {
+		m  map[string][]int
+		fn func(k string, v []int) (string, []int, bool)
+	}
+	tests := []struct {
+		name string
+		args args
+		want map[string][]int
+	}{
+		{
+			"filter entries",
+			args{
+				map[string][]int{
+					"a": {1, 2, 3, 4},
+					"b": {1, 2},
+					"c": {1, 2, 3},
+				},
+				func(k string, v []int) (string, []int, bool) {
+					if len(v) < 3 {
+						return k, v, false
+					}
+					return k, v, true
+				},
+			},
+			map[string][]int{
+				"a": {1, 2, 3, 4},
+				"c": {1, 2, 3},
+			},
+		},
+		{
+			"map entries",
+			args{
+				map[string][]int{
+					"a": {1, 2, 3, 4},
+					"b": {5, 6},
+				},
+				func(k string, v []int) (string, []int, bool) {
+					newK := strings.ToUpper(k)
+					newV := Map(v, func(i int) int { return i * 10 })
+					return newK, newV, true
+				},
+			},
+			map[string][]int{
+				"A": {10, 20, 30, 40},
+				"B": {50, 60},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := TransformMap(tt.args.m, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("TransformMap() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

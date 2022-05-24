@@ -413,6 +413,24 @@ func TakeWhile[T any](s []T, fn func(T) bool) []T {
 	return s[:i]
 }
 
+// TransformMap applies the given function to each key, value in the map,
+// and returns a new map of the same type after transforming the keys
+// and values depending on the callback functions return values. If the last
+// bool return value from the callback function is false, the entry is dropped
+func TransformMap[M ~map[K]V, K comparable, V any](
+	m M,
+	fn func(k K, v V) (K, V, bool),
+) M {
+	ret := make(map[K]V)
+	for k, v := range m {
+		newK, newV, include := fn(k, v)
+		if include {
+			ret[newK] = newV
+		}
+	}
+	return ret
+}
+
 // Unzip returns two slices, where the first slice is built from the first
 // values of each pair from the input slice, and the second slice is built
 // from the second values of each pair

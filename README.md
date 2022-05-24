@@ -4,7 +4,7 @@
 ### Simple generic utility functions to reduce golang boilerplate
 - Inspired by Kotlin and Rust collection functions
 - Supplement to the generic functions in golang.org/x/exp/slices and golang.org/x/exp/maps
-- Note: The Go compiler does not currently inline generic callback functions. So please apply your judgement while using functions from this library that involve callbacks. Use them when the expressiveness is worth any performance degration compared to handcoded *for loop* boilerplate.
+- Note: The Go compiler does not currently inline generic callback functions. So please use your judgement while using functions from this library that involve callbacks. Use them when the expressiveness is worth any performance degration compared to handcoded *for loop* boilerplate.
 
 ## List of functions
  - [All](#all)
@@ -38,6 +38,7 @@
  - [TakeLast](#takelast)
  - [TakeWhile](#takewhile)
  - [TakeLastWhile](#takelastwhile)
+ - [TransformMap](#transformmap)
  - [Unzip](#unzip)
  - [Windowed](#windowed)
  - [Zip](#zip)
@@ -331,6 +332,35 @@ TakeWhile(letters,  func(s rune) bool { return s < 'f' })
 TakeLastWhile(letters, func(s rune) bool { return s > 'w' })
 // ['x', 'y', 'z']
 ```
+
+### TransformMap
+- Applies the given function to each key, value in the map, and returns a new map of the same type after transforming the keys and values depending on the callback functions return values. 
+- If the last bool return value from the callback function is false, the entry is dropped
+```go
+// filtering a map
+// m = {"a":[1, 2, 3, 4] "b":[1, 2] "c":[1, 2, 3]}
+TransformMap(m, 
+    func(k string, v []int) (string, []int, bool) {
+        if len(v) < 3 {
+            return k, v, false
+        }
+        return k, v, true
+    })
+// drops all values with length less than 3
+// {"a":[1, 2, 3, 4]  "c":[1, 2, 3]}
+
+
+// transforming keys and values
+// m = {"a":[1, 2, 3, 4] "b":[5, 6]}
+TransformMap(m, 
+    func(k string, v []int) (string, []int, bool) {
+        newK := strings.ToUpper(k)
+        newV := Map(v, func(i int) int { return i * 10 })
+        return newK, newV, true
+    })
+// {"A":[10, 20, 30, 40]  "B":[50, 60]}
+```
+
 
 ### Unzip
 - Returns two slices, where:
