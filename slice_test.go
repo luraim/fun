@@ -3,6 +3,7 @@ package fun
 import (
 	"fmt"
 	"reflect"
+	"sort"
 	"strings"
 	"testing"
 )
@@ -113,7 +114,10 @@ func TestFilter(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Filter(tt.args.elems, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := Filter(tt.args.elems, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("Filter() = %v, want %v", got, tt.want)
 			}
 		})
@@ -142,7 +146,10 @@ func TestAssociate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Associate(tt.args.elems, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := Associate(tt.args.elems, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("Associate() = %v, want %v", got, tt.want)
 			}
 		})
@@ -183,7 +190,10 @@ func TestChunked(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Chunked(tt.args.s, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+			if got := Chunked(tt.args.s, tt.args.n); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("Chunked() = %v, want %v", got, tt.want)
 			}
 		})
@@ -191,7 +201,24 @@ func TestChunked(t *testing.T) {
 }
 
 func TestChunkedBy(t *testing.T) {
-	input := []int{10, 20, 30, 40, 31, 31, 33, 34, 21, 22, 23, 24, 11, 12, 13, 14}
+	input := []int{
+		10,
+		20,
+		30,
+		40,
+		31,
+		31,
+		33,
+		34,
+		21,
+		22,
+		23,
+		24,
+		11,
+		12,
+		13,
+		14,
+	}
 	output := ChunkedBy(input, func(prev, next int) bool {
 		return prev < next
 	})
@@ -249,7 +276,10 @@ func TestDistinctBy(t *testing.T) {
 	}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := DistinctBy(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := DistinctBy(tt.args.s, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("DistinctBy() = %v, want %v", got, tt.want)
 			}
 		})
@@ -297,7 +327,10 @@ func TestDrop(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Drop(tt.args.s, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+			if got := Drop(tt.args.s, tt.args.n); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("Drop() = %v, want %v", got, tt.want)
 			}
 		})
@@ -345,7 +378,10 @@ func TestDropLast(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := DropLast(tt.args.s, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+			if got := DropLast(tt.args.s, tt.args.n); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("DropLast() = %v, want %v", got, tt.want)
 			}
 		})
@@ -397,7 +433,10 @@ func TestDropLastWhile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := DropLastWhile(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := DropLastWhile(tt.args.s, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("DropLastWhile() = %v, want %v", got, tt.want)
 			}
 		})
@@ -446,7 +485,10 @@ func TestDropWhile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := DropWhile(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := DropWhile(tt.args.s, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("DropWhile() = %v, want %v", got, tt.want)
 			}
 		})
@@ -501,7 +543,10 @@ func TestFilterIndexed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FilterIndexed(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := FilterIndexed(tt.args.s, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("FilterIndexed() = %v, want %v", got, tt.want)
 			}
 		})
@@ -530,7 +575,10 @@ func TestFold(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Fold(tt.args.s, tt.args.initial, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := Fold(tt.args.s, tt.args.initial, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("Fold() = %v, want %v", got, tt.want)
 			}
 		})
@@ -559,7 +607,10 @@ func TestFoldIndexed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FoldIndexed(tt.args.s, tt.args.initial, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := FoldIndexed(tt.args.s, tt.args.initial, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("FoldIndexed() = %v, want %v", got, tt.want)
 			}
 		})
@@ -626,6 +677,31 @@ func TestGroupByWithNewTypesForKeyAndValue(t *testing.T) {
 
 }
 
+func TestItems(t *testing.T) {
+	m := map[string][]int{
+		"a": {1, 2, 3, 4},
+		"b": {1, 2},
+		"c": {1, 2, 3},
+	}
+	want := []*Pair[string, []int]{
+		{"a", []int{1, 2, 3, 4}},
+		{"b", []int{1, 2}},
+		{"c", []int{1, 2, 3}},
+	}
+	sort.Slice(want, func(i, j int) bool {
+		return want[i].Fst < want[j].Fst
+	})
+
+	got := Items(m)
+	sort.Slice(got, func(i, j int) bool {
+		return got[i].Fst < got[j].Fst
+	})
+
+	if got := Items(m); !reflect.DeepEqual(got, want) {
+		t.Errorf("Items() = %v, want %v", got, want)
+	}
+}
+
 func TestMap(t *testing.T) {
 	type args struct {
 		elems []int
@@ -646,7 +722,10 @@ func TestMap(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Map(tt.args.elems, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := Map(tt.args.elems, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("Map() = %v, want %v", got, tt.want)
 			}
 		})
@@ -673,7 +752,10 @@ func TestMapIndexed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MapIndexed(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := MapIndexed(tt.args.s, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("MapIndexed() = %v, want %v", got, tt.want)
 			}
 		})
@@ -740,7 +822,10 @@ func TestReduce(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Reduce(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := Reduce(tt.args.s, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("Reduce() = %v, want %v", got, tt.want)
 			}
 		})
@@ -770,7 +855,10 @@ func TestReduceIndexed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ReduceIndexed(tt.args.s, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := ReduceIndexed(tt.args.s, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("ReduceIndexed() = %v, want %v", got, tt.want)
 			}
 		})
@@ -859,7 +947,10 @@ func TestTake(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Take(tt.args.elems, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+			if got := Take(tt.args.elems, tt.args.n); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("Take() = %v, want %v", got, tt.want)
 			}
 		})
@@ -914,7 +1005,10 @@ func TestTakeLast(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := TakeLast(tt.args.s, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+			if got := TakeLast(tt.args.s, tt.args.n); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("TakeLast() = %v, want %v", got, tt.want)
 			}
 		})
@@ -1025,7 +1119,10 @@ func TestWindowed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Windowed(tt.args.s, tt.args.size, tt.args.step); !reflect.DeepEqual(got, tt.want) {
+			if got := Windowed(tt.args.s, tt.args.size, tt.args.step); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("Windowed() = %v, want %v", got, tt.want)
 			}
 		})
@@ -1135,7 +1232,11 @@ func TestFoldItems(t *testing.T) {
 				map[int]int{1: 10, 2: 20, 3: 30},
 				make(map[string]string),
 				func(acc map[string]string, k, v int) map[string]string {
-					acc[fmt.Sprintf("entry_%d", k)] = fmt.Sprintf("%d->%d", k, v)
+					acc[fmt.Sprintf("entry_%d", k)] = fmt.Sprintf(
+						"%d->%d",
+						k,
+						v,
+					)
 					return acc
 				},
 			},
@@ -1148,7 +1249,10 @@ func TestFoldItems(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FoldItems(tt.args.m, tt.args.initial, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := FoldItems(tt.args.m, tt.args.initial, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("FoldItems() = %v, want %v", got, tt.want)
 			}
 		})
@@ -1206,7 +1310,10 @@ func TestTransformMap(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := TransformMap(tt.args.m, tt.args.fn); !reflect.DeepEqual(got, tt.want) {
+			if got := TransformMap(tt.args.m, tt.args.fn); !reflect.DeepEqual(
+				got,
+				tt.want,
+			) {
 				t.Errorf("TransformMap() = %v, want %v", got, tt.want)
 			}
 		})

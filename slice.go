@@ -286,6 +286,15 @@ func GroupBy[T, V any, K comparable](
 	return ret
 }
 
+// Items returns the (key, value) pairs of the given map as a slice
+func Items[M ~map[K]V, K comparable, V any](m M) []*Pair[K, V] {
+	ret := make([]*Pair[K, V], 0, len(m))
+	for k, v := range m {
+		ret = append(ret, &Pair[K, V]{k, v})
+	}
+	return ret
+}
+
 // Map returns the slice obtained after applying the given function over every
 // element in the given slice
 func Map[T1, T2 any](s []T1, fn func(T1) T2) []T2 {

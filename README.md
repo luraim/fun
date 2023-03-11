@@ -7,41 +7,45 @@
 - Note: The Go compiler does not currently inline generic callback functions. So please use your judgement while using functions from this library that involve callbacks. Use them when the expressiveness is worth any performance degration compared to handcoded *for loop* boilerplate.
 
 ## List of functions
- - [All](#all)
- - [Any](#any)
- - [AppendToGroup](#appendtogroup)
- - [Associate](#associate)
- - [Chunked](#chunked)
- - [ChunkedBy](#chunkedby)
- - [Distinct](#distinct)
- - [DistinctBy](#distinctby)
- - [Drop](#drop)
- - [DropLast](#droplast)
- - [DropWhile](#dropwhile)
- - [DropLastWhile](#droplastwhile)
- - [Filter](#filter)
- - [FilterIndexed](#filterindexed)
- - [FilterMap](#filtermap)
- - [Fold](#fold)
- - [FoldIndexed](#foldindexed)
- - [FoldItems](#folditems)
- - [GetOrInsert](#GetOrInsert)
- - [GroupBy](#groupby)
- - [Map](#map)
- - [MapIndexed](#mapindexed)
- - [Partition](#partition)
- - [Reduce](#reduce)
- - [ReduceIndexed](#reduceindexed)
- - [Reverse](#reverse)
- - [Reversed](#reversed)
- - [Take](#take)
- - [TakeLast](#takelast)
- - [TakeWhile](#takewhile)
- - [TakeLastWhile](#takelastwhile)
- - [TransformMap](#transformmap)
- - [Unzip](#unzip)
- - [Windowed](#windowed)
- - [Zip](#zip)
+- [fun](#fun)
+    - [Simple generic utility functions to reduce golang boilerplate](#simple-generic-utility-functions-to-reduce-golang-boilerplate)
+  - [List of functions](#list-of-functions)
+    - [All](#all)
+    - [Any](#any)
+    - [AppendToGroup](#appendtogroup)
+    - [Associate](#associate)
+    - [Chunked](#chunked)
+    - [ChunkedBy](#chunkedby)
+    - [Distinct](#distinct)
+    - [DistinctBy](#distinctby)
+    - [Drop](#drop)
+    - [DropLast](#droplast)
+    - [DropWhile](#dropwhile)
+    - [DropLastWhile](#droplastwhile)
+    - [Filter](#filter)
+    - [FilterIndexed](#filterindexed)
+    - [FilterMap](#filtermap)
+    - [Fold](#fold)
+    - [FoldIndexed](#foldindexed)
+    - [FoldItems](#folditems)
+    - [GetOrInsert](#getorinsert)
+    - [GroupBy](#groupby)
+    - [Items](#items)
+    - [Map](#map)
+    - [MapIndexed](#mapindexed)
+    - [Partition](#partition)
+    - [Reduce](#reduce)
+    - [ReduceIndexed](#reduceindexed)
+    - [Reverse](#reverse)
+    - [Reversed](#reversed)
+    - [Take](#take)
+    - [TakeLast](#takelast)
+    - [TakeWhile](#takewhile)
+    - [TakeLastWhile](#takelastwhile)
+    - [TransformMap](#transformmap)
+    - [Unzip](#unzip)
+    - [Windowed](#windowed)
+    - [Zip](#zip)
 
 ### All
 - Returns true if all elements return true for given predicate
@@ -232,6 +236,18 @@ GroupBy([]string{"a", "abc", "ab", "def", "abcd"}, func(s string) (int,string) {
 	return len(s), s
 })
 // {1: ["a"], 2: ["ab"], 3: ["abc", "def"], 4: ["abcd"]},
+```
+
+### Items
+- Returns the (key, value) pairs of the given map as a slice
+```go
+// m := map[string][]int{"a": {1, 2, 3, 4}, "b": {1, 2}, "c": {1, 2, 3}}
+Items(m)
+// []*Pair[string, []int]{
+//      {"a", []int{1, 2, 3, 4}},
+//		{"b", []int{1, 2}},
+//		{"c", []int{1, 2, 3}},
+//	}
 ```
 
 ### Map
