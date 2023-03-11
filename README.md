@@ -245,8 +245,8 @@ GroupBy([]string{"a", "abc", "ab", "def", "abcd"}, func(s string) (int,string) {
 Items(m)
 // []*Pair[string, []int]{
 //      {"a", []int{1, 2, 3, 4}},
-//		{"b", []int{1, 2}},
-//		{"c", []int{1, 2, 3}},
+//      {"b", []int{1, 2}},
+//      {"c", []int{1, 2, 3}},
 //	}
 ```
 
