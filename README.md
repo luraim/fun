@@ -190,6 +190,22 @@ FilterMap([]int{1, 2, 3, 4, 5},
 // [4, 16]
 ```
 
+### FlatMap
+- Applies the given function to each element in the input slice and combines all resulting slices into one.   
+```go
+FlatMap([]int{1, 2, 3, 4, 5}, func(i int) []int { return []int{i, i * i} })
+// [1, 1, 2, 4, 3, 9, 4, 16, 5, 25]
+```
+
+### FlatMapIndexed
+- Applies the given function to each element in the input slice, which also receives the element's index, and combines all resulting slices into one.   
+```go
+FlatMap([]int{1, 2, 3, 4, 5}, func(idx, val int) []int { return []int{idx, val * val} })
+// 0, 1, 1, 4, 2, 9, 3, 16, 4, 25
+```
+
+
+
 ### Fold
 - Accumulates values starting with given initial value and applying given function to current accumulator and each element of the given slice.
 ```go

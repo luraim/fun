@@ -216,6 +216,30 @@ func FilterMap[T1, T2 any](
 	return ret
 }
 
+// FlatMap transforms a slice of T1 elementss (s) into a slice of T2 elements.
+// The transformation is defined by the function fn, which takes a T1 element and returns a slice of T2 elements.
+// This function applies fn to every element in s,
+// and combines the results into a single, "flattened" slice of T2 elements.
+func FlatMap[T1, T2 any](s []T1, fn func(T1) []T2) []T2 {
+	var ret []T2
+	for _, e := range s {
+		ret = append(ret, fn(e)...)
+	}
+	return ret
+}
+
+// FlatMapIndexed transforms a slice of T1 elements (s) into a slice of T2 elements.
+// The transformation is defined by the function fn, which takes a T1 element and the index to the element, and
+// returns a slice of T2 elements.
+// This function applies fn to every element in s, and combines the results into a single, "flattened" slice of T2 elements.
+func FlatMapIndexed[T1, T2 any](s []T1, fn func(int, T1) []T2) []T2 {
+	var ret []T2
+	for i, e := range s {
+		ret = append(ret, fn(i, e)...)
+	}
+	return ret
+}
+
 // Fold accumulates values starting with given initial value and applying
 // given function to current accumulator and each element.
 func Fold[T, R any](s []T, initial R, fn func(R, T) R) R {

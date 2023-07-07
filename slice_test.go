@@ -732,6 +732,62 @@ func TestMap(t *testing.T) {
 	}
 }
 
+func TestFlatMap(t *testing.T) {
+	type args struct {
+		elems []int
+		fn    func(int) []int
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{"test mapping",
+			args{
+				[]int{1, 2, 3, 4, 5},
+				func(i int) []int { return []int{i, i * i} },
+			},
+			[]int{1, 1, 2, 4, 3, 9, 4, 16, 5, 25},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := FlatMap(tt.args.elems, tt.args.fn)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FlatMap() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestFlatMapIndexed(t *testing.T) {
+	type args struct {
+		elems []int
+		fn    func(idx, val int) []int
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{"test mapping",
+			args{
+				[]int{1, 2, 3, 4, 5},
+				func(idx, val int) []int { return []int{idx, val * val} },
+			},
+			[]int{0, 1, 1, 4, 2, 9, 3, 16, 4, 25},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := FlatMapIndexed(tt.args.elems, tt.args.fn)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FlatMap() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestMapIndexed(t *testing.T) {
 	type args struct {
 		s  []int
