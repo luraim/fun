@@ -1,6 +1,3 @@
-> [!WARNING]
-> This repository is no longer maintained since I have stopped programming in Golang.
-
 # fun
 [![GoDoc](https://godoc.org/github.com/luraim/fun?status.svg)](https://godoc.org/github.com/luraim/fun)
 
@@ -28,6 +25,8 @@
     - [Filter](#filter)
     - [FilterIndexed](#filterindexed)
     - [FilterMap](#filtermap)
+    - [FlatMap](#flatmap)
+    - [FlatMapIndexed](#flatmapindexed)
     - [Fold](#fold)
     - [FoldIndexed](#foldindexed)
     - [FoldItems](#folditems)
